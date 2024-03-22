@@ -17440,7 +17440,34 @@ def createNewAccountFromItems(request):
        return redirect('/') 
 
 #End
+    #------------Eway start--------
+def eway_main(request):
+    log_id = request.session['login_id']
+    log_details= LoginDetails.objects.get(id=log_id)
+    if log_details.user_type == 'Company':
+        cmp = CompanyDetails.objects.get(login_details = log_details)
+        dash_details = CompanyDetails.objects.get(login_details=log_details)
+    else:
+        cmp = StaffDetails.objects.get(login_details = log_details).company
+        dash_details = StaffDetails.objects.get(login_details=log_details)
+    bnk = Banking.objects.filter(company = cmp)
+    allmodules= ZohoModules.objects.get(company = cmp)
+    return render(request,'zohomodules/eway_bill/eway_main.html',{'bnk':bnk, 'allmodules':allmodules, 'details':dash_details})
 
+def eway_new(request):
+    log_id = request.session['login_id']
+    log_details= LoginDetails.objects.get(id=log_id)
+    if log_details.user_type == 'Company':
+        cmp = CompanyDetails.objects.get(login_details = log_details)
+        dash_details = CompanyDetails.objects.get(login_details=log_details)
+    else:
+        cmp = StaffDetails.objects.get(login_details = log_details).company
+        dash_details = StaffDetails.objects.get(login_details=log_details)
+    bnk = Banking.objects.filter(company = cmp)
+    allmodules= ZohoModules.objects.get(company = cmp)
+    tod = datetime.now().strftime('%Y-%m-%d')
+    return render(request,'zohomodules/eway_bill/eway_new.html',{'tod':tod, 'allmodules':allmodules, 'details':dash_details})
+#----------------------End-----------------
 def check_journal_num_valid2(request):
     if 'login_id' in request.session:
         if request.session.has_key('login_id'):

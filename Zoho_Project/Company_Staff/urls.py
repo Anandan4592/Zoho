@@ -442,8 +442,10 @@ urlpatterns = [
     path('Staff/invoice/createNewAccountFromItems',views.createNewAccountFromItems, name='createNewAccountFromItems'),
     path('Staff/invoice/checkAccounts',views.checkAccounts, name='checkAccounts'),
     #End
-    
-
+    #-------------------------------------eway start-------------------------------------#
+    path('zohomodules/eway_bill/eway_main',views.eway_main,name='eway_main'),
+    path('zohomodules/eway_bill/eway_new',views.eway_new,name='eway_new'),
+ #-------------------------------------eway end-------------------------------------#
     re_path(r'^static/(?P<path>.*)$', serve,{'document_root': settings.STATIC_ROOT}),
 ]
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS)
