@@ -86,6 +86,142 @@
     color: black !important;
     font-weight: bold;
   }
+  /* The switch - the container */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+/* The slider (round or rectangular) */
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+    border-radius: 34px;
+}
+
+/* Rounded sliders */
+.slider.round {
+    border-radius: 34px;
+}
+
+/* Styling when toggled on */
+.slider.round:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+/* Changing background color when toggled on */
+input:checked + .slider {
+    background-color: #2196F3;
+}
+
+/* Changing circle position when toggled on */
+input:checked + .slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+}
+
+</style>
+<style>
+    .modal{
+      z-index: 9999;
+      overflow: scroll;
+    }
+    /* width */
+    ::-webkit-scrollbar {
+        width: 10px;
+    }
+
+    /* Track */
+    ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
+
+    /* Handle */
+    ::-webkit-scrollbar-thumb {
+        background: #888;
+    }
+
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
+
+    .hide {
+        display: none;
+    }
+    .hidden {
+      display: none;
+  }
+  .selectize-input.full {
+    background-color:rgb(45, 44, 44) !important;
+    color: white !important;
+    border: 1px solid rgba(246, 241, 241, 0.35) !important;
+   }
+   
+    .popup-0 {
+      height: 17rem;
+      width: 20rem;
+      background-color: rgb(3, 3, 3);
+      border-radius: 1rem;
+      position: absolute;
+      margin-bottom:70rem;
+      left: 0%;
+      transform: translate(-50%, -50%)scale(0.1);
+      text-align: center;
+      padding: 0 5rem 5 rem;
+      color: black;
+      
+      visibility: hidden;
+      transform: translate(-50%, -50%)scale(0.1);
+
+    }
+
+    .open-popup-3 {
+      margin-top: -30rem;
+      visibility: visible;
+      transform: translate(-50%, -50%)scale(1);
+      transition: transform 0.4s, top 0.4s;
+      margin-left: 40rem;
+    background-color: #000;
+    }
+    ::placeholder {
+      color: rgb(238, 230, 230); /* Change this to the desired color */
+    }
+    label {
+      color:white; /* Change this to the desired color */
+    }
+    input[type="text"],
+input[type="number"],
+input[type="email"],
+input[type="date"] {
+  color: white; /* Change this to the desired color */
+}
 </style>
 
 <div class="body-wrapper">
@@ -103,7 +239,7 @@
             <div class="card mb-5 p-5" style="background-color: black; border-radius: 1vh;">
               <h1 class="mb-0 text-uppercase text-right" style="color: white; font-weight: bolder;">New &nbsp;E-way Bill</h1><br>
               <hr class="text-warning">
-              <form action="{% url 'bank_create' %}" method="post" enctype="multipart/form-data"id="myForm">
+              <form action="" method="post" enctype="multipart/form-data"id="myForm">
                 {% csrf_token %}
                 <div class="row">
                   <label for="date" class="col-md-2 p-3 labels">Document Type*</label>
@@ -118,10 +254,17 @@
                 </div>
                 
                 <div class="row">
-                  <label for="name" class="col-md-2 p-3 labels">Customer Name*</label>
-                  <div class="col-md-3 p-3">
-                    <input type="text" class="form-control text-white bg-black" id="name" name="name">
-                  </div>
+                    
+                        <label for="name" class="col-md-2 p-3 labels">Customer Name*</label>
+                        <div class="col-md-3 p-3 d-flex align-items-center">
+                            <input type="text" class="form-control text-white bg-black" id="name" name="name">
+                            <a href="{% url 'eway_newcust' %}" class="btn btn-outline-warning py-2 ml-2" style="cursor: pointer; height: 38px;" >+</a>
+                        
+                    </div>
+                    
+               
+                   
+            
                   <div class="col-md-1 p-3"></div>
                   <label for="name" class="col-md-2 p-3 labels">Customer Email</label>
                   <div class="col-md-3 p-3">
@@ -132,7 +275,7 @@
                 <div class="row">
                   <label for="ac_no" class="col-md-2 p-3 labels">Address Details</label>
                   <div class="col-md-9 p-3">
-                    <input type="text" class="form-control text-white bg-black" id="ac_no" name="ac_no">
+                    <textarea class="form-control mt-3"  id="" name="note" placeholder="Address" style="height: 190px;"></textarea>
                   </div>
                 </div>
           
@@ -172,32 +315,1083 @@
                     </div>
                   </div>
 
+                  <div class="row">
+                    <label for="name" class="col-md-2 p-3 labels">Billing Address</label>
+                    <div class="col-md-3 p-3">
+                        <label class="switch">
+                            <input type="checkbox" id="transaction-type" name="transaction-type">
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                    <div class="col-md-1 p-3"></div>
+                    
+                  </div>
+                  <div class="row">
+                    <label for="ac_no" class="col-md-2 p-3 labels">Transportation </label>
+                    <div class="col-md-9 p-3">
+                      <input type="text" class="form-control text-white bg-black" id="ac_no" name="ac_no">
+                    </div>
+                  </div>
+                  <div class="row">
+                    <label for="name" class="col-md-2 p-3 labels">Vehicle No.</label>
+                    <div class="col-md-3 p-3">
+                      <input type="number" class="form-control text-white bg-black" id="name" name="name">
+                    </div>
+                    <div class="col-md-1 p-3"></div>
+                    <label for="name" class="col-md-2 p-3 labels">Kilometer</label>
+                    <div class="col-md-3 p-3">
+                      <input type="text" class="form-control text-white bg-black"  id="name" name="name">
+                    </div>
+                  </div>
                 <br>
                 <input type="submit" class="btn save_btn mt-2 my-4 mx-2" style="background-color: chocolate; color: white;" value="SAVE" id="save">
                 <input class="btn save_btn my-4 mt-2" style="background-color: chocolate; color: white;" type="reset" value="RESET" id="reset">
-              </form>
+                <div class="row  ">
+                    <div class="col-md-12 table-responsive-md mt-3">
+                    <table class="table table-bordered  mt-3" id="banktable">
+                    <thead>
+                        <tr class="text-center text-white">
+                         
+                            <a ><th style="cursor: pointer;" data-target="#newitem" data-toggle="modal">Item+</th></a>
+                            <th>HSN</th>
+                            <th>Quantity</th>
+                            <th>Rate</th>
+                            <th>Discount</th>
+                            <th>Tax</th>
+                            <th>Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                        <tr class='clickable-row text-center' data-href="View/Bank/{{ b.id }}">
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        
+                    </tbody>
+                </table>
+                </div>
+                </div>
+                <button class="btn save_btn mt-2 my-4 mx-2" style="background-color: chocolate; color: white;" type="button">Add another Line</button> 
+                <div class="row clearfix" style="margin-top:20px">
+                    <div class="col-md-6">
+                        <textarea class="form-control mt-3"  id="" name="note" placeholder="Note" style="height: 190px;"></textarea>
+                        <label for="file-upload" class="btn text-white border-0"
+                        style="background-color: rgb(210, 132, 30);">
+                        <i class="fas fa-upload text-white"></i> Upload File
+                    </label>
+                    <input class="pb-3"  id="file-upload" type="file" name="file" style="display:none;">
+                  </div>            
+                    <div class="col-md-1"></div>
+                    <div class="col-md-5 table-responsive-md mt-3 " id="invoiceItemsTableTotal" style="background-color:rgba(0,0,0,.4); border: 1px solid rgba(128, 128, 128, 0.6); margin-left: -2vh;">
+                        <div class="p-3">
+                            <div class="row container-fluid p-2 m-0">
+                                <div class="col-sm-4 mt-2"><label class="text-center">Sub Total</label></div>
+                                <div class="col-sm-1 mt-2">:</div>
+                                <div class="col-sm-7 "><input type="number" step="any" name='subtotal' value=0.00 readonly  class="form-control" id="sub_total"></div>
+                            </div>
+                            <div class="row container-fluid p-2 m-0" id="taxamountIGST" style="display: flex;">
+                                <div class="col-sm-4 mt-2"><label for="a" class="text-center">IGST</label></div>
+                                <div class="col-sm-1 mt-2">:</div>
+                                <div class="col-sm-7 "><input type="number" name='igst' step="any" id="igstAmount1" value=0.00 readonly  class="form-control"/></div>
+                            </div>
+                            <div class="row container-fluid p-2 m-0" style="display: none;" id="taxamountCGST">
+                                <div class="col-sm-4 mt-2"><label for="a" class="text-center">CGST</label></div>
+                                <div class="col-sm-1 mt-2">:</div>
+                                <div class="col-sm-7 "><input type="number" name='cgst' step="any" id="cgstAmount1" value=0.00 readonly  class="form-control"/></div>
+                            </div>
+                            <div class="row container-fluid p-2 m-0" style="display: none;" id="taxamountSGST">
+                                <div class="col-sm-4 mt-2"><label for="a" class="text-center">SGST</label></div>
+                                <div class="col-sm-1 mt-2">:</div>
+                                <div class="col-sm-7 "><input type="number" name='sgst' step="any" id="sgstAmount1" value=0.00 readonly class="form-control"/></div>
+                            </div>
+                            <div class="row container-fluid p-2 m-0">
+                                <div class="col-sm-4 mt-2"><label for="a" class="text-center">Tax Amount</label></div>
+                                <div class="col-sm-1 mt-2">:</div>
+                                <div class="col-sm-7 "><input type="number" step="any" name='taxamount' id="tax_amount" value=0.00 readonly  class="form-control"/></div>
+                            </div>
+                            
+                            <div class="row container-fluid p-2 m-0" >
+                                <div class="col-sm-4 mt-2"><label for="a" class="text-center">Shipping</label></div>
+                                <div class="col-sm-1 mt-2">:</div>
+                                <div class="col-sm-7 "><input type="number" step="any" name='ship' id="ship" value=0.00 class="form-control"/></div>
+                            </div>
+                            <div class="row container-fluid p-2 m-0">
+                                <div class="col-sm-4 mt-2"><label for="a" class="text-center">Adjustment</label></div>
+                                <div class="col-sm-1 mt-2">:</div>
+                                <div class="col-sm-7 "><input type="number" step="any" name='adj' id="adj" value=0.00 class="form-control"/></div>
+                            </div>
+                            <div class="row container-fluid p-2 m-0">
+                                <div class="col-sm-4 mt-2"><label for="a" class="text-center text-warning">Total</label></div>
+                                <div class="col-sm-1 mt-2">:</div>
+                                <div class="col-sm-7 "><input type="number" name='grandtotal' id="grandtotal" value=0.00 readonly  class="form-control"/></div>
+                            </div>
+                        </div>
+                    </div>
+                  </div>
+                  <button type="submit" class="btn save_btn mt-2 my-4 mx-2" style="background-color: chocolate; color: white;" >Save</button>
+            </form>
             </div>
           </div>
       </div>
   </div>
 </div> 
+<!-- New Item Modal -->
 
-<script>
-  $('#opn_bal').change(function (){
-    val = $('#opn_bal').val()
-    if($('#bal_type').val() == 'Credit'){
-      $('#opn_bal').val(-val)
-    }else{
-      if(val<0){
-        $('#opn_bal').val(-val)
+<div class="modal fade" id="newitem">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content" style="background-color: #060a0e;">
+            <div class="modal-header">
+                <h5 class="m-3 text-white">New Item</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class=" p-3">
+                    <form method="post" id="newItemForm">
+                        {% csrf_token %}
+
+                        <div class="row">
+                            <div class="col-md-6 mt-3">
+                                <label for="itemName" style="color: white;">Name</label>
+                                <input type="text" id="itemName" name="name" class="form-control" style="background-color: #0d1115; color: white;" autocomplete="off" required>
+                            </div>
+                            <div class="col-md-6 mt-3">
+                                <label for="itemType" style="color: white;">Type</label>
+                                <select name="type" class="form-control" id="itemType" style="background-color: #0d1115; color: white;" required>
+                                    <option selected disabled value="">Choose...</option>
+                                    <option value="Goods">Goods</option>
+                                    <option value="Services">Services</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mt-3">
+                                <label for="itemUnit" style="color: white;">Unit</label>
+                                <div class="d-flex">
+                                    <select class="custom-select" name="unit" id="itemUnit" required style="background-color: #0d1115; color: white;">
+                                        <option selected disabled value="">Choose...</option>
+                                        {% for a in units %}
+                                        <option class="text-uppercase">{{ a.unit_name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <a href="#">
+                                        <button type="button" class="btn btn-outline-warning ml-1" data-dismiss="modal" data-toggle="modal" data-target="#newunit">+</button>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mt-3">
+                                <label for="hsnField" style="color: white;">HSN Code</label>
+                                <input type="number" name="hsn" class="form-control" style="background-color: #0d1115; color: white;" placeholder="Enter a valid HSN code" required id="hsnField" oninput="validateHSN()">
+                                <div id="hsnError" style="color: red;"></div>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-md-3 mt-3">
+                                <label style="color: white;">Tax Reference</label>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-check mt-1">
+                                    <input class="form-check-input" name="taxref" type="radio" id="inclusive" value="taxable" onclick="showdiv()" required>
+                                    <label style="color: white;" for="inclusive">taxable</label>
+                                </div>
+                            </div>
+                            <div class="form-check mt-1">
+                                <input class="form-check-input" name="taxref" type="radio" value="non taxable" id="check" onclick="hidediv()">
+                                <label style="color: white;" for="check">non taxable</label>
+                            </div>
+                        </div>
+                        <div class="row"  id="taxableDiv" style="display: none;">
+                            <div class="col-md-6 mt-3">
+                                <label for="intraStateTax" style="color: white;">Intra State Tax Rate</label>
+                                <select name="intra_st" class="form-control" style="background-color: #0d1115; color: white;" id="intraStateTax" >
+                                    <option value=0>GST 0 (0%)</option>
+                                    <option value=3>GST 3 (3%)</option>
+                                    <option value=5>GST 5 (5%)</option>
+                                    <option value=12>GST 12 (12%)</option>
+                                    <option value=18>GST 18 (18%)</option>
+                                    <option value=28>GST 28 (28%)</option>        
+                                </select>
+                            </div>
+                            <div class="col-md-6 mt-3">
+                                <label for="interStateTax" style="color: white;">Inter State Tax Rate</label>
+                                <select name="inter_st" class="form-control" style="background-color: #0d1115; color: white;" id="interStateTax" >
+                                    <option value=0>IGST 0 (0%)</option>
+                                    <option value=3>IGST 3 (3%)</option>
+                                    <option value=5>IGST 5 (5%)</option>
+                                    <option value=12>IGST 12 (12%)</option>
+                                    <option value=18>IGST 18 (18%)</option>
+                                    <option value=28>IGST 28 (28%)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mt-3">
+                                <label style="color: white;">Purchase Price</label>
+                                <div class="row">
+                                    <div class="col-md-12 d-flex">
+                                        <input type="text" class="form-control mr-1" value="INR" style="width:60px;background-color: #0d1115; color: white;">
+                                        <input type="number" name="pcost" class="form-control" id="purprice" style="background-color: #0d1115; color: white;" value="0">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mt-3">
+                                <label style="color: white;">Sales Price</label>
+                                <div class="row">
+                                    <div class="col-md-12 d-flex">
+                                        <input type="text" class="form-control mr-1" value="INR" style="width:60px;background-color: #0d1115; color: white;">
+                                        <input type="text" name="salesprice" class="form-control" id="saleprice" style="background-color: #0d1115; color: white;" value="0">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mt-3">
+                                <label for="purchaseAccount" style="color: white;">Account</label>
+                                <div class="d-flex">
+                                    <select name="pur_account" class="form-control" style="background-color: #0d1115; color: white;" id="purchaseAccount">
+                                        <option value="" selected disabled>--Choose--</option>
+                                        {% for a in accounts %}
+                                        <option value="{{ a.account_name }}">{{ a.account_name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <button type="button" data-dismiss="modal" data-toggle="modal" data-target="#createNewAccount" class="btn btn-outline-warning ml-1" id="openAccountModal">+</button>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mt-3">
+                                <label for="salesAccount" style="color: white;">Account</label>
+                                <select name="sale_account" class="form-control" style="background-color: #0d1115; color: white;" id="salesAccount">
+                                    <option value="" selected disabled>--Choose--</option>
+                                    <option value="General Income">General Income</option>
+                                    <option value="Interest Income">Interest Income</option>
+                                    <option value="Late Fee Income">Late Fee Income</option>
+                                    <option value="Discount Income">Discount Income</option>
+                                    <option value="Shipping Charges">Shipping Charges</option>
+                                    <option value="Other Charges">Other Charges</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mt-3">
+                                <label for="purchaseDescription" style="color: white;">Description</label>
+                                <textarea class="form-control" name="pur_desc" id="purchaseDescription" style="background-color: #0d1115; color: white;"></textarea>  
+                            </div>
+                            <div class="col-md-6 mt-3">
+                                <label for="salesDescription" style="color: white;">Description</label>
+                                <textarea class="form-control" name="sale_desc" id="salesDescription" style="background-color: #0d1115; color: white;"></textarea>
+                            </div>
+                        </div>
+                                    
+                        <div class="row mt-3" >
+                            <div class="col-md-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" onclick="ShowHideDiv(this)" type="checkbox"  id="track">
+                                    <label class="form-check-label" for="track">Track Inventory</label>
+                                </div>  
+                            </div>
+                        </div>
+                        <div class="row" id="inventorytrack" style="display: none">
+                            <div class="col-md-6 mt-3">
+                                <label style="color: white;">Inventory Account</label>
+                                <select name="invacc" id="invAcc" class="form-control" style="background-color: #0d1115; color: white;">
+                                    <option selected disabled value="" >Choose...</option>
+                                    <option value="Inventory Assets">Inventory Assets</option>    
+                                </select>
+                            </div>
+                            <div class="col-md-3 mt-3">
+                                <label style="color: white;">Stock on hand</label>
+                                <input type="number" name="stock" id="stockOnHand" class="form-control" style="background-color: #0d1115; color: white;" value="0">
+                            </div>
+                            <div class="col-md-3 mt-3">
+                                <label style="color: white;">Stock Rate per Unit</label>
+                                <input type="number" id="stockRate" name="stock_rate" class="form-control" style="background-color: #0d1115; color: white;" value="0">
+                            </div>
+                        </div>
+
+                        <div class="row" >
+                            <div class="col-md-3 mt-3">
+                                <label style="color: white;">Minimum Stock to maintain</label>
+                                <input type="number" id="minStock" name="min_stock" class="form-control" style="background-color: #0d1115; color: white;" value="0">
+                            </div>
+                        </div>
+
+                        <div class="row mt-4">
+                            <div class="col-4"></div>
+                            <div class="col-4 d-flex justify-content-center">
+                                <button class="btn btn-outline-warning text-grey w-75" data-dismiss="modal" type="submit" id="saveNewItem">Save</button>
+                            </div>
+                            <div class="col-4"></div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>   
+    </div>
+</div>
+<!-- Item Unit Create Modal -->
+
+<div class="modal fade" id="newunit">
+    <div class="modal-dialog">
+        <div class="modal-content" style="background-color: #0c1216;">
+            <div class="modal-header">
+                <h5 class="m-3">New Item Unit</h5>
+                <button type="button" class="close" data-toggle="modal" data-target="#newitem" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class=" p-3">
+                    <form method="post" id="newUnitForm">
+                        {% csrf_token %}
+                        <div class="row mt-2">
+                            <div class="col-12">
+                                <label for="name">Unit Name</label>
+                                <input name="name" id="unit_name" class="form-control text-uppercase w-100">
+                            </div>
+                        </div>
+                        <div class="row mt-4">
+                            <div class="col-12 d-flex justify-content-center">
+                                <button class="btn btn-outline-warning text-grey" data-toggle="modal" data-target="#newitem" type="button" id="saveItemUnit">Save</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>   
+    </div>
+</div>
+<!-- Account Create Modal -->
+
+<div class="modal fade" tabindex="-1" role="dialog" id="createNewAccount">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content" style="background-color: #060a0e;">
+            <div class="modal-header">
+                <h5 class="m-3">New Account</h5>
+                <button type="button" class="close" data-toggle="modal" data-target="#newitem" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class=" p-3">
+                    <form method="post" id="newAccountForm">
+                        {% csrf_token %}
+                        <div class="row mt-2 mb-2">
+                            <div class="col-md-6">
+                                <div class="row mt-2">
+                                    <div class="col-12">
+                                        <label for="acctyp">Account Type</label>
+                                        <input type="text" value="Assets" id="acctype" name="acctype" hidden>
+                                        <select name="account_type" id="Account_type" class="custom-select-md form-control w-100"  onchange="AccountTypeChange(this)" required>
+                                            <optgroup label="Expense" style="background-color: rgb(10, 16, 21);">
+                                                <option value="Expense"> Expense </option>
+                                                <option value="Cost Of Goods Sold"> Cost Of Goods Sold </option>
+                                                <option value="Other Expense"> Other Expense </option>
+                                            </optgroup>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-12">
+                                        <label for="name">*Name</label>
+                                        <input name="account_name" id="accountName" required class="custom-select-md form-control w-100">
+                                    </div>
+                                </div>
+                                <div class="row mt-1" id="subAccountCheck" style="display: none;">
+                                    <div class="col-12">
+                                        <div class="form-check">
+                                            <input type="checkbox" name="subAccountCheckBox" class="form-check-input" id="subAccountCheckBox">
+                                            <label class="form-check-label" for="subAccountCheckBox">Make this a sub-account</label>
+                                            <span><i class="fa fa-question-circle" data-toggle="tooltip" data-placement="bottom" title="Select this option if you are creating a sub-account."></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mt-2" id="parentAccountValue" style="display: none;">
+                                    <div class="col-12">
+                                        <label for="parentAccount">Parent Account</label>
+                                        <select name="parent_account" id="parentAccount" class="custom-select-md form-control w-100">
+        
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-12">
+                                        <label for="acc_code">Account Code</label>
+                                        <input type="text" name="account_code" id="account_code" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-12">
+                                        <label>Description</label>
+                                        <textarea class="form-control" rows="3" id="description" name="description" placeholder="Max. 500 Characters"></textarea>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                            <div class="col-md-6 mt-4"> 
+                                <div id="acnt-desc" class="form-control" name="detype" style="font-size: small;  height: fit-content;"></div>
+                            </div>
+                        </div>
+                            
+                        <div class="mt-3">
+                            <div class="row">
+                                <div class="col-md-4"></div>
+                                <div class="col-md-4 d-flex justify-content-center">
+                                    <button type="button" data-toggle="modal" data-target="#newItem" id="saveNewAccount" class="btn btn-outline-warning">Save</button>
+                                </div>
+                                <div class="col-md-4"></div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>   
+    </div>
+</div>
+
+
+
+
+
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+
+
+
+  
+  <script>
+      $(document).ready(function () {
+          $('#customer').selectize({
+              sortField: 'value'
+          });
+      });
+      
+  
+      function refreshCustomerDetails(){
+          console.log($('#customer').text());
+          if($('#customer').val() != 0){
+              $('#custErr').text('');
+              $.ajax({
+                  type : 'POST',
+                  url: "{% url 'getInvoiceCustomerData' %}",
+                  data: {
+                      id: $('#customer').val(),
+                      csrfmiddlewaretoken: '{{ csrf_token }}',
+                  },
+                  
+                  success: function(data){
+                      console.log('AJAX-Response-->',data);
+                      document.getElementById('customerEmail').value = data.email;
+                      var placeOfSupplySelect = document.getElementById('placeOfSupply');
+                      var newOption = new Option(data.shipState, data.shipState); // Create a new option element
+                      placeOfSupplySelect.appendChild(newOption); // Append the new option to the select element
+                      placeOfSupplySelect.value = data.shipState; // Set the value of the select element to the desired value
+                     
+                      document.getElementById('gstType').value = data.gstType;
+                      document.getElementById('billAddress').value = data.street + '\n' + data.city + '\n' + data.state + '\n' + data.country  + '\n' + data.pincode ;
+                      if(data.gstin){
+                          document.getElementById('gstInDisplay').style.display = 'block';
+                          document.getElementById('gstin').value = data.gstNo;
+                      }else{
+                          document.getElementById('gstInDisplay').style.display = 'none';
+                          document.getElementById('gstin').value = '';
+                      }
+                      $('#applyPriceList').prop('checked') ? $('#applyPriceList').prop('checked', false) : $('#applyPriceList').prop('checked',false);
+                      if(data.priceList){
+                          $('#applyPriceListSection').show();
+                          $('#customerPriceListId').val(data.ListId);
+                          $('#custPriceListName').text('Applied: '+data.ListName)
+                      }else{
+                          $('#applyPriceListSection').hide();
+                          $('#customerPriceListId').val("");
+                      }
+  
+                      refreshTax();
+                      checkPriceList();
+                  }
+              });
+          }else{
+              document.getElementById('customerEmail').value = "";
+              document.getElementById('placeOfSupply').value = "";
+              document.getElementById('gstType').value = "";
+              document.getElementById('billAddress').value ="";
+              document.getElementById('gstin').value = "";
+              $('#customerPriceListId').val("");
+              $('#custErr').text('Select a customer..');
+          }
       }
-    }
-  })
+  
+      $(document).ready(function () {
+          $('#customer').on('change', function() {
+              refreshCustomerDetails();
+          });
+      });
+  
+      $(document).on("click","#savePaymentTerm",function(){
+          var trm = $('#termName').val();
+          var dys = $("#termDays").val();
+          if (trm !="" && dys !=""){
+              $.ajax({
+                  type : 'POST',
+                  url:"{% url 'newCustomerPaymentTerm' %}",
+                  data:{
+                      'term' : trm,
+                      'days' : dys,
+                      csrfmiddlewaretoken: '{{ csrf_token }}'
+                  },
+                  
+                  success: function(response) {
+                      if(response.status){
+                          document.getElementById("newTermForm").reset();
+                          
+                          var dropdown = $('#paymentTerm');
+                          dropdown.empty();
+                          dropdown.append(`<option value="" selected>Choose</option>`);
+                          $.each(response, function(key, value) {
+                              for(let i=0; i<value.length; i++){
+                                  if(value[i].name == trm){
+                                      dropdown.append($('<option selected></option>').attr('text',value[i].days).text(value[i].name).val(value[i].id))
+                                  }else{
+                                      dropdown.append($('<option></option>').attr('text',value[i].days).text(value[i].name).val(value[i].id))
+                                  }   
+                              }
+                          });
+  
+                          findDueDate();
+  
+                      }else{
+                          alert("Something went wrong.!")
+                      }
+                  },         
+              });
+          }
+          else{
+              alert('Invalid')
+          }
+      });
+  
+      function findDueDate(){
+          var days = parseInt($('#paymentTerm').find(":selected").attr('text'))
+          order_date =new Date($('#invoiceDate').val())
+          console.log(days);
+          console.log(order_date);
+          if (!isNaN(order_date.getTime())) {
+  
+              const endDate = new Date(order_date);
+              endDate.setDate(endDate.getDate() + days);
+  
+              const isoString = endDate.toISOString(); 
+              const day = isoString.slice(8, 10);
+              const month = isoString.slice(5, 7);
+              const year = isoString.slice(0, 4);
+  
+              const formattedDate = `${day}-${month}-${year}`;
+  
+              document.getElementById("dueDate").value = formattedDate;
+          } else {
+                  alert("Please enter a valid date.");
+                  $('#paymentTerm').val('')
+          }
+      }
+  
+      $('#paymentTerm').on('change', function () {
+          findDueDate();
+      });
+  
+      $('#invoiceDate').on('change', function() {
+          findDueDate();
+      });
+  
 
-  $('#bal_type').change(function (){
-    val = $('#opn_bal').val()
-    $('#opn_bal').val(-val)
-  })
+      $(document).ready(function() {
+        $("#paymentMethod").change(function() {
+            var x=$('#paymentMethod').val();
+            if(x==='Cash'){
+                $('#chequediv').hide()
+                $('#bnkdiv').hide()
+                $('#upidiv').hide()
+                document.getElementById('cheque_id').value=""
+                document.getElementById('upi_id').value=""
+                document.getElementById('bnk_id').value=""
+            }else if(x==='Cheque'){
+                $('#chequediv').show()
+                $('#bnkdiv').hide()
+                $('#upidiv').hide()
+                document.getElementById('upi_id').value=""
+                document.getElementById('bnk_id').value=""
+            }else if(x==='UPI'){
+                $('#upidiv').show()
+                $('#bnkdiv').hide()
+                $('#chequediv').hide()
+                document.getElementById('cheque_id').value=""
+                document.getElementById('bnk_id').value=""
+            }else{
+                $('#bnkdiv').show()
+                $('#chequediv').hide()
+                $('#upidiv').hide()
+                document.getElementById('cheque_id').value=""
+                document.getElementById('upi_id').value=""
+
+                $.ajax({
+                    type: "GET",
+                    url: "{% url 'getBankAccount' %}",
+                    
+                    data: {
+                        id: $('#paymentMethod').find(':selected').attr('text'),
+                    },
+                    
+                    success: function (response) {
+                        if (response.status){
+                            document.getElementById('cheque_id').value="";
+                            document.getElementById('upi_id').value="";
+                            document.getElementById("bnk_id").value = response.account;
+                        }else{
+                            alert(response.message);
+                        }
+                    }
+                });
+            }
+        });
+    });
+
+
+  $(document).on('change','#placeOfSupply',function()   {
+    refreshTax();
+    calc();
+});
+
+function filterFunction(id){
+    var options = $('#'+ $("#"+id).next().attr('id')).children();
+    var search_text = $("#"+id).val().toLowerCase();
+    options.each(function(){
+        if($(this).text().toLowerCase().includes(search_text)){
+            $(this).show()
+        }else{
+            $(this).hide()
+        }
+    })
+}
+
+function getItemDetails(inpId, value){
+    var itm = value;
+    var exists = false;
+    var plc = $('#placeOfSupply').val();
+    var PLId = $('#customerPriceListId').val();
+    console.log('clicked',value);
+
+    $('#items-table-body tr').each(function () {
+        var html = $(this).html();
+        if (html != '') {
+            var itemName = $(this).find('.item-display').val();
+            console.log(itm,itemName);
+            if(itemName == itm){
+                exists = true;
+                console.log('exists',exists);
+            }
+        }
+    });
+    console.log('status',exists);
+
+    if(!exists){
+        if(plc != ""){
+            var n = inpId.slice(4);
+            $.ajax({
+            url: "{% url 'getInvItemDetails' %}",
+            type : 'GET',
+            data:{
+                item : value,
+                csrfmiddlewaretoken: '{{ csrf_token }}'
+                },
+            
+            success: function(response) {
+                if (response.status){
+                    $('#'+inpId).val(value);
+                    document.getElementById('itemId'+n).value = response.id;
+                    document.getElementById('hsn'+n).value = response.hsn;
+                    document.getElementById('qtyspan'+n).innerHTML = response.avl;
+                    document.getElementById('avl'+n).innerHTML = response.avl;
+                    document.getElementById('price'+n).value = response.sales_rate;
+                    document.getElementById('priceListPrice'+n).value = response.PLPrice;
+                    document.getElementById('taxGST'+n).value = response.gst;
+                    document.getElementById('taxIGST'+n).value = response.igst;
+                    
+
+                    refreshTax();
+                    calc();
+                }
+            },
+            });
+        }else{
+            alert('Select Place of Supply.!')
+        }
+    }else{
+        alert('Item already exists in the INVOICE, choose another or change quantity.!')
+    }
+
+}
+function refreshTax(){
+  var cmpState = $('#state1').val();
+  var plc = $('#placeOfSupply').val();
+
+  if(cmpState == plc){
+      $('.tax_ref').css('display','none');
+      $('.tax_ref_gst').css('display','block');
+      document.getElementById('taxamountCGST').style.display = 'flex';
+      document.getElementById('taxamountSGST').style.display = 'flex';
+      document.getElementById('taxamountIGST').style.display = 'none';
+  }else{
+      $('.tax_ref').css('display','none');
+      $('.tax_ref_igst').css('display','block');
+      document.getElementById('taxamountCGST').style.display = 'none';
+      document.getElementById('taxamountSGST').style.display = 'none';
+      document.getElementById('taxamountIGST').style.display = 'flex';
+  }
+}
+$(document).on('change','#invoiceNumber', function() {
+    $('#invNoErr').text('');
+    var inv_num = $(this).val();
+    if(inv_num != ""){
+        console.log(inv_num);
+        $.ajax({
+            type: "GET",
+            url: "{% url 'checkInvoiceNumber' %}",
+            data: {
+                invNum : inv_num,
+            },
+            success: function (response) {
+                if (response.status){
+                    $('#invNoErr').text('');
+                }else{
+                    $('#invNoErr').text(response.message);
+                }
+            }
+        })
+    }
+});
+function changeItemQty(id){
+    id_val = id.slice(3)
+    var qty = document.getElementById(id).value;
+    var avl_val = document.getElementById(`avl${id_val}`).innerText;
+
+    if( parseInt(qty) > parseInt(avl_val) ){
+        alert("Quantity Greater than Available Quantity")
+        document.getElementById(id).value = avl_val;
+        calc()
+    }else{
+        document.getElementById(`qtyspan${id_val}`).textContent = parseInt(avl_val) - parseInt(qty);
+
+    }
+}
+
+$(document).ready(function(){
+    $('#items-table-body').on('keyup change', function () {
+        refreshTax();
+        calc()
+    });
+});
+
+$(document).ready(function(){
+    $(document).on("blur", ".disc", function(){
+        if($(this).val() != ""){
+        }else{
+        $(this).val(0);
+        calc()
+        }
+    }); 
+});
+
+// calculation---------------------------
+
+function calc() {
+    $('#invoiceItemsTable tbody tr').each(function () {
+        var html = $(this).html();
+        if (html != '') {
+            var qty = $(this).find('.qty').val();
+            if($('#applyPriceList').prop('checked')){
+                var price = $(this).find('.priceListPrice').val();
+            }else{
+                var price = $(this).find('.price').val();
+            }
+            var dis = $(this).find('.disc').val();
+            var bc = $("#placeOfSupply").val();
+            var compstate = $("#state1").val();
+
+            if(bc==compstate){
+                var tax = $(this).find('.tax_ref_gst').val();
+            }
+            else{
+                var tax = $(this).find('.tax_ref_igst').val();
+            }
+            
+            $(this).find('.total').val((parseFloat(qty) * parseFloat(price)) - parseFloat(dis));
+            $(this).find('.itemTaxAmount').val(((qty * price)-dis) * (tax / 100));
+            calc_total();
+        }
+    });
+}
+
+function calc_total() {
+        
+    total = 0;
+    $('.total').each(function () {
+        total += parseFloat($(this).val());
+    });
+    taxamount = 0;
+    $('.itemTaxAmount').each(function () {
+        taxamount += parseFloat($(this).val());
+    });
+    $('#sub_total').val(total.toFixed(2));
+    $('#tax_amount').val(taxamount.toFixed(2));
+    var ship = parseFloat($("#ship").val());
+    var adj_val = parseFloat($('#adj').val())
+    var gtot = taxamount + total + ship + adj_val;
+
+    $('#grandtotal').val(gtot.toFixed(2));
+    
+    var adv_val = parseFloat($('#advance').val())
+    var bal = gtot - adv_val
+    $('#balance').val(bal.toFixed(2));
+    splitTax();
+}
+
+function splitTax(){
+    var bc = $("#placeOfSupply").val();
+    var compstate = $("#state1").val();
+    
+    d=0
+    if (bc == compstate  ) {
+        var gst = taxamount/2
+
+        $('#cgstAmount1').val(parseFloat(gst.toFixed(2)));
+        $('#sgstAmount1').val(parseFloat(gst.toFixed(2)));
+        $('#igstAmount1').val(parseFloat(d.toFixed(2)));
+    }else{
+
+        $('#igstAmount1').val(taxamount.toFixed(2));
+        $('#cgstAmount1').val(d.toFixed(2));
+        $('#sgstAmount1').val(d.toFixed(2));
+    }   
+}
+
+$(document).ready(function(){
+    $("#ship").on('keyup change',function() {
+
+
+
+        var subtot = $('#sub_total').val();
+        var tax = $('#tax_amount').val();
+        var sh = $("#ship").val();
+        var adj = $("#adj").val();
+        $('#grandtotal').val((parseFloat(subtot)+parseFloat(tax)+parseFloat(sh)+parseFloat(adj)).toFixed(2));
+        $('#balance').val((parseFloat($("#grandtotal").val())-parseFloat($("#advance").val())).toFixed(2))
+        
+    });
+
+    $(document).on("blur", "#ship", function(){
+        if($(this).val() != ""){
+        }else{
+        $(this).val(0);
+        calc_total();
+        }
+    }); 
+});
+
+$(document).ready(function(){
+    $("#adj").on('keyup change',function() {
+
+        var subtot = $('#sub_total').val();
+        var tax = $('#tax_amount').val();
+        var sh = $("#ship").val();
+        var adj = $("#adj").val();
+        $('#grandtotal').val((parseFloat(subtot)+parseFloat(tax)+parseFloat(sh)+parseFloat(adj)).toFixed(2));
+        $('#balance').val((parseFloat($("#grandtotal").val())-parseFloat($("#advance").val())).toFixed(2))
+    });
+
+    $(document).on("blur", "#adj", function(){
+        if($(this).val() != ""){
+        }else{
+        $(this).val(0);
+        calc_total();
+        }
+    }); 
+});
+
+$(document).ready(function() {
+    $("#advance").on('keyup change',function() {
+        var tot_val = $('#grandtotal').val();
+        var adv_val = $('#advance').val();
+        if(adv_val !=""){
+            if (parseFloat(tot_val) < parseFloat(adv_val)){
+                $('#advance').val(parseFloat(tot_val))
+                $('#balance').val(0);
+                alert("Advance Greater than Total Amount")
+    
+            }else{
+                var bal = parseFloat(tot_val) - parseFloat(adv_val)
+                $('#balance').val(bal.toFixed(2));
+            }
+        }else{
+            $('#balance').val(parseFloat(tot_val));
+        }
+        
+    })
+});
+
+// Tabel row add, clone, remove
+
+function refreshIndex(){
+    var slNo = 1;
+    var $rows = $("#items-table-body tr");
+
+    for (var i = 0; i < $rows.length; i++) {
+        $rows.eq(i).attr('id', 'tab_row'+slNo)
+        $rows.eq(i).find('[id]').each(function() {
+            var oldId = $(this).attr('id');
+            var newId = oldId.replace(/\d+/, slNo);
+            $(this).attr('id', newId );
+        });
+
+        $rows.eq(i).find('.nnum').text(slNo);
+        slNo++;
+    }
+}
+
+$(document).on('click','.remove_row',function(){
+    var row_id = $(this).attr("id");
+    $('#tab_row'+row_id+'').remove();
+    refreshIndex();
+    calc();
+});
+
+
+$(document).on('click','.clone_row',function(){
+    var roinc = $("#items-table-body tr").length;
+    var originalRow = $(this).closest('#items-table-body tr'); 
+    var clonedRow = originalRow.clone();
+
+    clonedRow.find('.tax_ref_gst').each(function() {
+        $(this).val(originalRow.find('.tax_ref_gst').val());
+    });
+    clonedRow.find('.tax_ref_igst').each(function() {
+        $(this).val(originalRow.find('.tax_ref_igst').val());
+    });
+    clonedRow.find('.item-display').val('');
+    originalRow.after(clonedRow);
+    refreshIndex();
+    calc();
+    
+});
+
+
+
+$(document).ready(function(){
+$('#add').click(function(){
+var roinc = $("#items-table-body tr").length;
+roinc++
+$('#items-table-body').append(
+    `
+    <tr id='tab_row${roinc}'>
+        <td class="nnum" style="text-align: center;">${roinc}</td>
+        <td style="width: 20%;">
+            <div class="d-flex">
+                <div class="w-100">
+                    <div class="p-0 border-0 bg-none position-relative drop-box" style="display: block;">
+                        <input required type="text" id="item${roinc}" value="" name="item_name[]" class="dropdown-toggle form-control item-display" onkeyup="filterFunction($(this).attr('id'))"  data-toggle="dropdown" aria-expanded="false" placeholder="Items.." autocomplete="off">
+                        <ul class="dropdown-menu w-100 items-available position-absolute" id="menu${roinc}"  style="overflow-y: auto; height: fit-content;max-height: 40vh;"> 
+                          {% for i in p %}
+                            <li class="dropdown-item items-options" onclick="getItemDetails($(this).parent().prev().attr('id'),$(this).html())">{{i.item_name}}</li>
+                            {% endfor %}
+                        </ul>
+                        
+                    </div>
+                </div>
+                <a href="#">
+                    <button type="button" class="btn btn-outline-warning ml-1" data-target="#newitem" data-toggle="modal">+</button>
+                </a>
+            </div>
+        
+        </td>
+        <td>
+            <input type="hidden" name="item_id[]" id="itemId${roinc}">
+            <input type="text" name='hsn[]' id="hsn${roinc}" placeholder='HSN Code' class="form-control HSNCODE"  readonly />
+        </td>
+        <td >
+            <input type="number" name='qty[]' id="qty${roinc}"  class="form-control qty mb-1" step=0 min=1  value=0 onchange="changeItemQty(this.id)" required/>
+            <input type="text" id="avl${roinc}" style="display: none;">
+            <div class="d-flex"><span>Available Qty :</span><span id="qtyspan${roinc}" class=''></span></div>
+        </td>
+        <td>
+            <input type="number" name='price[]' id="price${roinc}" class="form-control price" step="0.00" min="0"  value=0 readonly />
+            <input type="number" name='priceListPrice[]' id="priceListPrice${roinc}" class="form-control priceListPrice" step="0.00" min="0" style="background-color: #43596c; color: white;display: none;" value=0 readonly />
+        </td>
+        
+        <td style="width: 13%;">
+            <!-- <input type="text"  id="select_tax" placeholder="Tax Rate" class="form-control seltax d-flex"> -->
+            <select name='taxGST[]' id="taxGST${roinc}" class="form-control tax_ref tax_ref_gst" style="display: block;" onchange="taxchange(this.id)">
+                <option selected disabled hidden>Select GST</option>
+                <option value=28 >28.0% GST</option>
+                <option value=18 >18.0% GST</option>
+                <option value=12 >12.0% GST</option>
+                <option value=5 >05.0% GST</option>
+                <option value=3 >03.0% GST</option>
+                <option value=0 >0.0% GST</option>
+            </select>
+            <select name='taxIGST[]' id="taxIGST${roinc}" class="form-control tax_ref tax_ref_igst" style="display: none;" onchange="taxchange(this.id)">
+                <option selected disabled hidden >Select IGST</option>
+                <option value=28 >28.0% IGST</option>
+                <option value=18 >18.0% IGST</option>
+                <option value=12 >12.0% IGST</option>
+                <option value=5 >05.0% IGST</option>
+                <option value=3 >03.0% IGST</option>
+                <option value=0 >0.0% IGST</option>
+            </select>
+            <div class="mt-1" style=" text-align: center;color: red;" ><span id="invalidtax${roinc}" style="display: none;"> Invalid Tax %</span> </div>    
+        </td>
+        <td >
+            <input type="number" name='discount[]'  placeholder='Enter Discount' id="disc${roinc}" value=0 class="form-control disc" step=0 min=0   />
+        </td>
+
+        <td><input type="number" name='total[]' id="total${roinc}" class="form-control total" value=0 readonly  /></td>
+        <td style="display: none;"><input type="hidden" id="taxamount${roinc}" class="form-control itemTaxAmount" /></td>
+        <td>
+            <button type="button" id="${roinc}" class="btn btn-warning font-weight-bold clone_row fa fa-clone px-2 my-1 py-1" title="Clone Row" ></button><br>
+            <button type="button" id="${roinc}" class="btn btn-danger remove_row px-2 py-1 mx-1 fa fa-close" title="Remove Row"> </button>
+        </td>
+    </tr>
+    `);
+    checkPriceList();
+});
+});
+
+
+function validateForm() {
+    var cust = $('#customer').val();
+    var length = $("#items-table-body tr").length;
+
+    if(length < 1){
+        alert('Add atleast 1 item..!')
+        return false;
+    }
+
+    if(cust == 0){
+        alert('Select customer..')
+        return false;
+    }
+}
+
+
 </script>
+
 
 {%endblock%}

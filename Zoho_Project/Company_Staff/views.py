@@ -17467,6 +17467,34 @@ def eway_new(request):
     allmodules= ZohoModules.objects.get(company = cmp)
     tod = datetime.now().strftime('%Y-%m-%d')
     return render(request,'zohomodules/eway_bill/eway_new.html',{'tod':tod, 'allmodules':allmodules, 'details':dash_details})
+
+def eway_newcust(request):
+    if 'login_id' in request.session:
+        if request.session.has_key('login_id'):
+            log_id = request.session['login_id']
+           
+        else:
+            return redirect('/')
+    
+        log_details= LoginDetails.objects.get(id=log_id)
+        if log_details.user_type=='Staff':
+            dash_details = StaffDetails.objects.get(login_details=log_details)
+            comp_details=CompanyDetails.objects.get(id=dash_details.company.id)
+
+        else:    
+            dash_details = CompanyDetails.objects.get(login_details=log_details)
+            comp_details=CompanyDetails.objects.get(login_details=log_details)
+
+            
+        allmodules= ZohoModules.objects.get(company=comp_details,status='New')
+        
+        comp_payment_terms=Company_Payment_Term.objects.filter(company=comp_details)
+        price_lists=PriceList.objects.filter(company=comp_details,type='Sales',status='Active')
+
+       
+        return render(request,'zohomodules/eway_bill/eway_newcust.html',{'details':dash_details,'allmodules': allmodules,'comp_payment_terms':comp_payment_terms,'log_details':log_details,'price_lists':price_lists}) 
+    else:
+        return redirect('/') 
 #----------------------End-----------------
 def check_journal_num_valid2(request):
     if 'login_id' in request.session:

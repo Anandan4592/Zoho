@@ -966,3 +966,56 @@ class invoicecomments(models.Model):
     comments = models.CharField(max_length=500,null=True,blank=True)
 
 #End
+    #-----------------Eway start -----------------------------#
+
+class Eway(models.Model):
+    doc_type = models.CharField(max_length=220,null=True,blank=True)
+    trans_sub_type = models.CharField(max_length=220,null=True,blank=True)
+    customer = models.ForeignKey(Customer,on_delete=models.CASCADE,null=True,blank=True)
+    bill_address = models.CharField(max_length=220,null=True,blank=True)
+    bill_number = models.CharField(max_length=220,null=True,blank=True)
+    reference_no = models.IntegerField(blank=True,null=True,default=0)
+    date = models.DateField(auto_now_add=True, null=True, blank=True)
+    trans_type = models.CharField(max_length=220,null=True,blank=True)
+    place_of_supply = models.CharField(max_length=220,null=True,blank=True)
+    transportation = models.CharField(max_length=220,null=True,blank=True)
+    kilometers = models.CharField(max_length=220,null=True,blank=True)
+    vehicle_no = models.CharField(max_length=220,null=True,blank=True)
+    description = models.CharField(max_length=220,null=True,blank=True)
+    doc = models.FileField(upload_to='file/', null=True, blank=True)
+    sub_total = models.IntegerField(blank=True,null=True,default=0)
+    CGST = models.IntegerField(blank=True,null=True,default=0)
+    SGST = models.IntegerField(blank=True,null=True,default=0)
+    IGST = models.IntegerField(blank=True,null=True,default=0)
+    shipping = models.IntegerField(blank=True,null=True,default=0)
+    adjustment = models.IntegerField(blank=True,null=True,default=0)
+    grand_total = models.IntegerField(blank=True,null=True,default=0)
+    company=models.ForeignKey(CompanyDetails,on_delete=models.CASCADE)
+    logindetails=models.ForeignKey(LoginDetails,on_delete=models.CASCADE)
+
+
+class Eway_bill_items(models.Model):
+    items = models.CharField(max_length=220,null=True,blank=True)
+    hsn = models.CharField(max_length=220,null=True,blank=True)
+    quantity = models.IntegerField(blank=True,null=True,default=0)
+    price = models.IntegerField(blank=True,null=True,default=0)
+    tax_rate = models.IntegerField(blank=True,null=True,default=0)
+    discount = models.IntegerField(blank=True,null=True,default=0)
+    total = models.IntegerField(blank=True,null=True,default=0)
+    eway=models.ForeignKey(Eway,on_delete=models.CASCADE)
+    company=models.ForeignKey(CompanyDetails,on_delete=models.CASCADE)
+    logindetails=models.ForeignKey(LoginDetails,on_delete=models.CASCADE)
+
+
+class Eway_bill_reference(models.Model):
+    reference_no = models.IntegerField(blank=True,null=True,default=0)
+    company=models.ForeignKey(CompanyDetails,on_delete=models.CASCADE)
+    logindetails=models.ForeignKey(LoginDetails,on_delete=models.CASCADE)
+
+class Eway_bill_history(models.Model):
+    eway=models.ForeignKey(Eway,on_delete=models.CASCADE)
+    company=models.ForeignKey(CompanyDetails,on_delete=models.CASCADE)
+    logindetails=models.ForeignKey(LoginDetails,on_delete=models.CASCADE)
+    date = models.DateField(auto_now_add=True, null=True, blank=True)
+    action = models.CharField(max_length=220,null=True,blank=True)
+    #-----------------Eway End -----------------------------
