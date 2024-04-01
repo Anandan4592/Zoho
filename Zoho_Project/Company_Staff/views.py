@@ -17455,46 +17455,52 @@ def eway_main(request):
     return render(request,'zohomodules/eway_bill/eway_main.html',{'bnk':bnk, 'allmodules':allmodules, 'details':dash_details})
 
 def eway_new(request):
-    log_id = request.session['login_id']
-    log_details= LoginDetails.objects.get(id=log_id)
-    if log_details.user_type == 'Company':
-        cmp = CompanyDetails.objects.get(login_details = log_details)
-        dash_details = CompanyDetails.objects.get(login_details=log_details)
-    else:
-        cmp = StaffDetails.objects.get(login_details = log_details).company
-        dash_details = StaffDetails.objects.get(login_details=log_details)
-    bnk = Banking.objects.filter(company = cmp)
-    allmodules= ZohoModules.objects.get(company = cmp)
-    tod = datetime.now().strftime('%Y-%m-%d')
-    return render(request,'zohomodules/eway_bill/eway_new.html',{'tod':tod, 'allmodules':allmodules, 'details':dash_details})
-
-def eway_newcust(request):
     if 'login_id' in request.session:
-        if request.session.has_key('login_id'):
-            log_id = request.session['login_id']
-           
-        else:
+        login_id = request.session['login_id']
+        if 'login_id' not in request.session:
             return redirect('/')
-    
-        log_details= LoginDetails.objects.get(id=log_id)
-        if log_details.user_type=='Staff':
-            dash_details = StaffDetails.objects.get(login_details=log_details)
-            comp_details=CompanyDetails.objects.get(id=dash_details.company.id)
-
-        else:    
+    log_details= LoginDetails.objects.get(id=login_id)
+    if log_details.user_type == 'Staff':
+                dash_details = StaffDetails.objects.get(login_details=log_details)
+                item=Items.objects.filter(company=dash_details.company)
+                tod = datetime.now().strftime('%Y-%m-%d')
+                allmodules= ZohoModules.objects.get(company=dash_details.company,status='New')
+                units = Unit.objects.filter(company=dash_details.company)
+                accounts=Chart_of_Accounts.objects.filter(company=dash_details.company)
+                comp_payment_terms=Company_Payment_Term.objects.filter(company=dash_details)
+                price_lists=PriceList.objects.filter(company=dash_details,type='Sales',status='Active')
+                context = {
+                    'details': dash_details,
+                    'units': units,
+                    'allmodules': allmodules,
+                    'accounts':accounts,
+                    'comp_payment_terms':comp_payment_terms,
+                    'price_lists':price_lists,
+                    'tod':tod
+                }
+                return render(request,'zohomodules/eway_bill/eway_new.html',context)
+    if log_details.user_type == 'Company':
             dash_details = CompanyDetails.objects.get(login_details=log_details)
-            comp_details=CompanyDetails.objects.get(login_details=log_details)
+            item=Items.objects.filter(company=dash_details)
+            tod = datetime.now().strftime('%Y-%m-%d')
+            allmodules= ZohoModules.objects.get(company=dash_details,status='New')
+            units = Unit.objects.filter(company=dash_details)
+            accounts=Chart_of_Accounts.objects.filter(company=dash_details)
+            comp_payment_terms=Company_Payment_Term.objects.filter(company=dash_details)
+            price_lists=PriceList.objects.filter(company=dash_details,type='Sales',status='Active')
+            context = {
+                    'details': dash_details,
+                    'units': units,
+                    'allmodules': allmodules,
+                    'tod':tod,
+                    'comp_payment_terms':comp_payment_terms,
+                    'price_lists':price_lists,
+                    'accounts':accounts
+            }
+    
+            return render(request, 'zohomodules/eway_bill/eway_new.html',context)
 
-            
-        allmodules= ZohoModules.objects.get(company=comp_details,status='New')
-        
-        comp_payment_terms=Company_Payment_Term.objects.filter(company=comp_details)
-        price_lists=PriceList.objects.filter(company=comp_details,type='Sales',status='Active')
 
-       
-        return render(request,'zohomodules/eway_bill/eway_newcust.html',{'details':dash_details,'allmodules': allmodules,'comp_payment_terms':comp_payment_terms,'log_details':log_details,'price_lists':price_lists}) 
-    else:
-        return redirect('/') 
 #----------------------End-----------------
 def check_journal_num_valid2(request):
     if 'login_id' in request.session:
