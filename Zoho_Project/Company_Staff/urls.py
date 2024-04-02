@@ -445,7 +445,7 @@ urlpatterns = [
     #-------------------------------------eway start-------------------------------------#
     path('zohomodules/eway_bill/eway_main',views.eway_main,name='eway_main'),
     path('zohomodules/eway_bill/eway_new',views.eway_new,name='eway_new'),
-    
+    path('eway_customer_create',views.eway_customer_create,name='eway_customer_create'),
  #-------------------------------------eway end-------------------------------------#
     re_path(r'^static/(?P<path>.*)$', serve,{'document_root': settings.STATIC_ROOT}),
 ]
