@@ -17674,6 +17674,144 @@ def eway_customer_create(request):
             }
             return JsonResponse(error,status=400)
 
+def eway_create_item(request):                                                               
+    
+    login_id = request.session['login_id']
+    if 'login_id' not in request.session:
+        return redirect('/')
+    log_user = LoginDetails.objects.get(id=login_id)
+    if log_user.user_type == 'Company':
+        company_id = request.session['login_id']
+        
+        if request.method=='POST':
+            a=Items()
+            b=Item_Transaction_History()
+            c = CompanyDetails.objects.get(login_details=company_id)
+            b.company=c
+            b.Date=date.today()
+            b.logindetails=log_user
+            a.login_details=log_user
+            a.company=c
+            a.item_type = request.POST.get("type",None)
+            a.item_name = request.POST.get("name",None)
+            unit_id = request.POST.get("unit")
+            uid=Unit.objects.get(id=unit_id)
+            # unit_instance = get_object_or_404(Unit, id=unit_id)
+            a.unit = uid
+            a.hsn_code = request.POST.get("hsn",None)
+            a.tax_reference = request.POST.get("radio",None)
+            a.intrastate_tax = request.POST.get("intra",None)
+            a.interstate_tax= request.POST.get("inter",None)
+            a.selling_price = request.POST.get("sel_price",None)
+            a.sales_account = request.POST.get("sel_acc",None)
+            a.sales_description = request.POST.get("sel_desc",None)
+            a.purchase_price = request.POST.get("cost_price",None)
+            a.purchase_account = request.POST.get("cost_acc",None)
+            a.purchase_description = request.POST.get("pur_desc",None)
+            # track = request.POST.get("trackState",None)
+            track_state_value = request.POST.get("trackstate", None)
+
+# Check if the checkbox is checked
+            if track_state_value == "on":
+                a.track_inventory = 1
+            else:
+                a.track_inventory = 0
+
+            
+            minstock=request.POST.get("minimum_stock",None)
+            if minstock != "":
+                a.minimum_stock_to_maintain = request.POST.get("minimum_stock",None)
+            else:
+                a.minimum_stock_to_maintain = 0
+            a.activation_tag = 'Active'
+            a.type = 'Opening Stock'
+            a.inventory_account = request.POST.get("invacc",None)
+            a.opening_stock = request.POST.get("openstock",None)
+            a.current_stock=request.POST.get("openstock",None)
+            a.opening_stock_per_unit = request.POST.get("rate",None)
+            item_name= request.POST.get("name",None)
+            hsncode=request.POST.get("hsn",None)
+            
+             # Check for duplicate items
+            if Items.objects.filter(item_name=item_name, company=c).exists():
+                return JsonResponse({'error': 'Item with the same name exists'})
+            elif Items.objects.filter(hsn_code=hsncode, company=c).exists():
+                return JsonResponse({'error': 'Item with the same HSN code exists'})
+            else:
+                # Save the items and return success response
+                a.save()    
+                t = Items.objects.get(id=a.id)
+                b.items = t
+                b.save()
+                return JsonResponse({'success': True})
+            
+    elif log_user.user_type == 'Staff':
+        staff_id = request.session['login_id']
+        if request.method=='POST':
+            a=Items()
+            b=Item_Transaction_History()
+            staff = LoginDetails.objects.get(id=staff_id)
+            sf = StaffDetails.objects.get(login_details=staff)
+            c=sf.company
+            b.Date=date.today()
+            b.company=c
+            b.logindetails=log_user
+            a.login_details=log_user
+            a.company=c
+            a.item_type = request.POST.get("type",None)
+            a.item_name = request.POST.get("name",None)
+            unit_id = request.POST.get("unit")
+            unit_instance = get_object_or_404(Unit, id=unit_id)
+            a.unit = unit_instance
+            a.hsn_code = request.POST.get("hsn",None)
+            a.tax_reference = request.POST.get("radio",None)
+            a.intrastate_tax = request.POST.get("intra",None)
+            a.interstate_tax= request.POST.get("inter",None)
+            a.selling_price = request.POST.get("sel_price",None)
+            a.sales_account = request.POST.get("sel_acc",None)
+            a.sales_description = request.POST.get("sel_desc",None)
+            a.purchase_price = request.POST.get("cost_price",None)
+            a.purchase_account = request.POST.get("cost_acc",None)
+            a.purchase_description = request.POST.get("pur_desc",None)
+            # track_state_value = request.POST.get("trackState", None)
+
+            track_state_value = request.POST.get("trackstate", None)
+
+            # Check if the checkbox is checked
+            if track_state_value == "on":
+                a.track_inventory = 1
+            else:
+                a.track_inventory = 0
+            minstock=request.POST.get("minimum_stock",None)
+            item_name= request.POST.get("name",None)
+            hsncode=request.POST.get("hsn",None)
+            
+            if minstock != "":
+                a.minimum_stock_to_maintain = request.POST.get("minimum_stock",None)
+            else:
+                a.minimum_stock_to_maintain = 0
+            # a.activation_tag = request.POST.get("status",None)
+            a.inventory_account = request.POST.get("invacc",None)
+            a.opening_stock = request.POST.get("openstock",None)
+            a.current_stock=request.POST.get("openstock",None)
+        
+        
+
+        
+            # Check for duplicate items
+            if Items.objects.filter(item_name=item_name, company=c).exists():
+                return JsonResponse({'error': 'Item with the same name exists'})
+            elif Items.objects.filter(hsn_code=hsncode, company=c).exists():
+                return JsonResponse({'error': 'Item with the same HSN code exists'})
+            else:
+                # Save the items and return success response
+                a.save()    
+                t = Items.objects.get(id=a.id)
+                b.items = t
+                b.save()
+                return JsonResponse({'success': True})
+    return JsonResponse({'error': 'Invalid request'})
+
 #----------------------End-----------------
 def check_journal_num_valid2(request):
     if 'login_id' in request.session:

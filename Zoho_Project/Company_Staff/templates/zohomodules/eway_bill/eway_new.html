@@ -1368,7 +1368,7 @@ input[type="date"] {
             </div>
             <div class="modal-body" >
                 <div class="card p-3" style="background: rgb(0, 0, 0);">
-                    <form  method="POST" id="newItemForm">
+                    <form  method="POST" action="{% url 'eway_create_item' %}" id="newItemForm">
                         {% csrf_token %}
 
                         <div class="row">
@@ -1468,7 +1468,7 @@ input[type="date"] {
                               <input  type="checkbox" name="selling" checked> <label >selling  information</label><br><br>
                               <div class=" row">
                                 <br>
-                                <label class="col-sm-2 col-form-label" style="color: aliceblue;">Selling price </label>
+                                <label class="col-sm-2 col-md-3 col-form-label" style="color: aliceblue;">Selling price </label>
                                 <div class="col-sm-12 col-md-7 col-9 ml-5">
                                   <div class="input-group mb-2">
                                     <div class="input-group-prepend">
@@ -1481,7 +1481,7 @@ input[type="date"] {
                               <br>
                               <br>
                               <div class="row">
-                                <label  class="col-sm-2 col-form-label" style="color: aliceblue;">Account *</label>
+                                <label  class="col-sm-2 col-md-3 col-form-label" style="color: aliceblue;">Account *</label>
                                 <div class="col-sm-10 col-md-7 col-9 ml-5">
                                   <select name="sel_acc" class="form-control bg-light text-dark change-disply " style="background-color: black; color: white;">
                                     <option value=" ">--Select Account--</option>
@@ -1498,7 +1498,7 @@ input[type="date"] {
                               <br>
                               <br>
                               <div class=" row">
-                                <label  class="col-sm-2 col-form-label" style="color: aliceblue;">Description </label>
+                                <label  class="col-sm-2 col-md-3 col-form-label" style="color: aliceblue;">Description </label>
                                 <div class="col-sm-10 col-md-7 col-9 ml-5">
                                   <input  type="text" style="color: #ede4e4;" name="sel_desc" class="form-control bg-light text-dark change-disply " placeholder="Enter Discription">
                                 </div>
@@ -1509,7 +1509,7 @@ input[type="date"] {
                               <input type="checkbox" name="purchase" checked> <label for="">Purchase information</label><br><br>
                               <div class=" row">
                                 <br>
-                                <label  class="col-sm-2 col-form-label" style="color: aliceblue;">Cost Price*</label>
+                                <label  class="col-sm-2 col-md-3 col-form-label" style="color: aliceblue;">Cost Price*</label>
                                 <div class="col-sm-10 col-md-7 col-9">
                                   <div class="input-group mb-2">
                                     <div class="input-group-prepend">
@@ -1523,7 +1523,7 @@ input[type="date"] {
                               <br>
                               <div class=" row in">
                       
-                                <label class="col-sm-2 col-form-label" style="color: aliceblue;">Account*</label>
+                                <label class="col-sm-2 col-md-3 col-form-label" style="color: aliceblue;">Account*</label>
                                 <div class="col-sm-10 col-md-7 col-5">
                                     <div class="d-flex align-items-center">
                                         <select name="cost_acc" class="form-control bg-light text-dark change-disply " id="myaccount" style="color: #fefefe;background-color: #000;" required>
@@ -1571,7 +1571,7 @@ input[type="date"] {
                             </div>
                             <br><br>
                             <div class=" row ">
-                                <label class="col-sm-2 col-form-label" style="color: aliceblue;">Description</label>
+                                <label class="col-sm-2 col-md-3 col-form-label" style="color: aliceblue;">Description</label>
                                 <div class="col-sm-10 col-md-7 col-5">
                                     <div class="d-flex align-items-center">
                                         <input  type="text" style="color: #ede4e4;" name="pur_desc" class="form-control bg-light text-dark change-disply " placeholder="Enter Discription">
@@ -1806,6 +1806,42 @@ input[type="date"] {
 
 
   <!-- SCRIPTS -->
+  <!-- add new item ajax  script start -->
+ 
+  <script>
+    $(document).ready(function() {
+        $('#newItemForm').submit(function(event) {
+            event.preventDefault(); // Prevent default form submission behavior
+
+            // Submit form using AJAX
+            $.ajax({
+                url: $(this).attr('action'),
+                type: 'POST',
+                data: $(this).serialize(), // Serialize form data
+                success: function(response) {
+                    // Update HTML with the response or perform any necessary actions
+                    if(response.error){
+                        alert(response.error);
+                    } else if(response.success){
+                        // If item creation is successful, close the modal
+                        var modal = document.getElementById('newitem');
+                        modal.style.display = 'none';
+                        $('.modal-backdrop').remove(); 
+                        // You can add any additional logic here, like updating the item list, etc.
+                    }
+                },
+                error: function(xhr, status, error) {
+                    // Handle error if necessary
+                    console.error('AJAX request failed:', error);
+                }
+            });
+        });
+    });
+</script>
+
+
+
+<!-- add new item ajax  script start -->
   <!-- add new customer ajax  script start -->
 <script>
     $(document).ready(function() {
