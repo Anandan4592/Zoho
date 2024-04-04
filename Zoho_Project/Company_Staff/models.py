@@ -1018,4 +1018,7 @@ class Eway_bill_history(models.Model):
     logindetails=models.ForeignKey(LoginDetails,on_delete=models.CASCADE)
     date = models.DateField(auto_now_add=True, null=True, blank=True)
     action = models.CharField(max_length=220,null=True,blank=True)
+
+class Eway_bill_transportation(models.Model):
+    transport = models.CharField(max_length=220,null=True,blank=True)
     #-----------------Eway End -----------------------------

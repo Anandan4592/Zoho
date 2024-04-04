@@ -4,7 +4,34 @@
 
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-
+<style>         /* SEARCH STYLE */
+    /* Style the Select2 search input */
+    .select2-search__field {
+      width: 100%; /* Set the width as needed */
+      padding: 8px; /* Adjust padding as needed */
+      border: 1px solid #92acc6; /* Add border color */
+      border-radius: 4px; /* Add border-radius for rounded corners */
+      outline: none; /* Remove the outline */
+      color: #000;
+    }
+  /*   
+    .select2-container .select2-selection--single{box-sizing:border-box;cursor:pointer;display:block;height:35px;user-select:none;color: black;
+      -webkit-user-select:none;background-color: #fff;} */
+  .select2-container .select2-selection--single .select2-selection__rendered{border: 1px solid white; border-radius: 6px; display:block;padding-left:20px;padding-right:20px;padding-top: 6px; height: 35px;color: rgb(252, 252, 252);background-color: #000000;border-radius: 2px;box-shadow: #fcfcfc;border-color: #f2e8e8;}
+      .select2-dropdown{background-color:rgb(0, 0, 0);color: rgb(253, 253, 253);position:absolute;left:-100000px;width:100%;z-index:1051;color: rgb(255, 255, 255);border-color: #f2e8e8;}
+      .select2-results{display:block;border: #ced4da;border-color: #f2e8e8;}
+      .select2-results__options{list-style:none;margin:0;padding:0;color: rgb(255, 255, 255);background-color: #030303;padding-left: 20px;border-color: #f2e8e8;} 
+      .select2-results__option[aria-selected]{cursor:pointer;color: rgb(251, 251, 251);background-color: #0c0c0c;border-color: #f2e8e8;}
+      .select2-container--open .select2-dropdown{left:0;color: rgb(255, 255, 255);background-color: #000000;border-color: #f2e8e8;}
+  
+      .select2-hidden-accessible{background-color: #000000;border:2px !important;clip:rect(0 0 0 0) !important;-webkit-clip-path:inset(50%) !important;clip-path:inset(50%) !important;height:0px !important;padding:0 !important;position:absolute !important;width:1px !important;white-space:nowrap !important;color: rgb(250, 250, 250)} 
+      /* .select2-container--default .select2-selection--single{background-color:#000000;border:1px solid #000000;border-radius:4px;color: rgb(0, 0, 0);background-color: #ede4e4;} */
+  /* .select2-hidden-accessible{background-color: #fff;border:0 !important;clip:rect(0 0 0 0) !important;-webkit-clip-path:inset(50%) !important;clip-path:inset(50%) !important;height:1px !important;overflow:hidden !important;padding:0 !important;position:absolute !important;width:1px !important;white-space:nowrap !important;color: black}  */
+  .select2-container--default .select2-selection--single:focus, .select2-container--default .select2-selection--single .select2-search__field:focus, .typeahead:focus, .tt-query:focus, .tt-hint:focus {
+      border: 1px solid rgba(250, 250, 250, 0.5);
+      background-color: #d3bcbc;
+  }
+  </style>
 <style>
   .modal{
     z-index: 9999;
@@ -371,9 +398,9 @@ input[type="date"] {
               <form action="" method="post" enctype="multipart/form-data"id="myForm">
                 {% csrf_token %}
                 <div class="row">
-                  <label for="date" class="col-md-2 p-3 labels">Document Type*</label>
+                  <label for="doctype" class="col-md-2 p-3 labels">Document Type*</label>
                   <div class="col-md-3 p-3">
-                    <select name="doc" class="form-control"  style="background-color: black; color: white;">
+                    <select name="edoc" class="form-control"  style="background-color: black; color: white;">
                         <option value="" disabled selected hidden>Select</option>
                         <option value="0">INVOICES</option>
                         <option value="3">CREDIT NOTES</option>
@@ -382,9 +409,9 @@ input[type="date"] {
                     </select>
                   </div>
                   <div class="col-md-1 p-3"></div>
-                  <label for="date" class="col-md-2 p-3 labels">Transaction Sub Type*</label>
+                  <label for="docstype" class="col-md-2 p-3 labels">Transaction Sub Type*</label>
                   <div class="col-md-3 p-3">
-                    <select name="tst" class="form-control"  style="background-color: black; color: white;">
+                    <select name="etst" class="form-control"  style="background-color: black; color: white;">
                         <option value="" disabled selected hidden>Select</option>
                         <option value="0">SUPPLY</option>
                         <option value="3">EXPORT</option>
@@ -396,9 +423,19 @@ input[type="date"] {
                 
                 <div class="row">
                     
-                        <label for="name" class="col-md-2 p-3 labels">Customer Name*</label>
+                        <label for="ecname" class="col-md-2 p-3 labels">Customer Name*</label>
                         <div class="col-md-3 p-3 d-flex align-items-center">
-                            <input type="text" class="form-control text-white bg-black" id="name" name="name">
+                            <select name="ename" class="form-control" id="ename"  style="background-color: black; color: white;border-radius: 5px;"  >
+                                {% for custo in ecustomer %}
+                                  <option value={{custo.id}}>{{custo.customer_display_name}}</option>
+                                {% endfor %}
+                              </select>
+                              <script>
+                               $(document).ready(function() {
+                                    $('#ename').select2();
+                                });
+                                </script>                        
+                                 
                             <a class="btn btn-outline-warning py-2 ml-2" data-target="#newCustomer" data-toggle="modal" style="cursor: pointer; height: 38px;" >+</a>
                         
                     </div>
@@ -407,52 +444,52 @@ input[type="date"] {
                    
             
                   <div class="col-md-1 p-3"></div>
-                  <label for="name" class="col-md-2 p-3 labels">Customer Email</label>
+                  <label for="ecmail" class="col-md-2 p-3 labels">Customer Email</label>
                   <div class="col-md-3 p-3">
-                    <input type="email" class="form-control text-white bg-black" id="name" name="name">
+                    <input type="email" class="form-control text-white bg-black" id="ewayemail" name="ewayemail">
                   </div>
                 </div>
           
                 <div class="row">
-                  <label for="ac_no" class="col-md-2 p-3 labels">Address Details</label>
+                  <label for="eac_no" class="col-md-2 p-3 labels">Address Details</label>
                   <div class="col-md-9 p-3">
-                    <textarea class="form-control mt-3"  id="" name="note" placeholder="Address" style="height: 190px;"></textarea>
+                    <textarea class="form-control mt-3"  id="eaddress" name="eaddress" placeholder="Address" style="height: 190px;"></textarea>
                   </div>
                 </div>
           
                 <div class="row">
-                    <label for="name" class="col-md-2 p-3 labels">GST Treatment</label>
+                    <label for="ewgsttreat" class="col-md-2 p-3 labels">GST Treatment</label>
                     <div class="col-md-3 p-3">
-                      <input type="text" class="form-control text-white bg-black" id="name" name="name">
+                      <input type="text" class="form-control text-white bg-black" id="egsttreat" name="egsttreat">
                     </div>
                     <div class="col-md-1 p-3"></div>
-                    <label for="name" class="col-md-2 p-3 labels">GST Value</label>
+                    <label for="ewgstval" class="col-md-2 p-3 labels">GST Value</label>
                     <div class="col-md-3 p-3">
-                      <input type="email" class="form-control text-white bg-black" id="name" name="name">
+                      <input type="text" class="form-control text-white bg-black" id="egstvalue" name="egstvalue">
                     </div>
                   </div>
                 
                   <div class="row">
-                    <label for="name" class="col-md-2 p-3 labels">Invoice*</label>
+                    <label for="ewayinvoice" class="col-md-2 p-3 labels">Invoice*</label>
                     <div class="col-md-3 p-3">
-                      <input type="text" class="form-control text-white bg-black" id="name" name="name">
+                      <input type="text" class="form-control text-white bg-black" id="einvoice" name="einvoice">
                     </div>
                     <div class="col-md-1 p-3"></div>
-                    <label for="name" class="col-md-2 p-3 labels">Date</label>
+                    <label for="ewaydate" class="col-md-2 p-3 labels">Date</label>
                     <div class="col-md-3 p-3">
-                      <input type="date" class="form-control text-white bg-black" value="{{ tod }}" id="name" name="name">
+                      <input type="date" class="form-control text-white bg-black" value="{{ tod }}" id="edate" name="edate">
                     </div>
                   </div>
           
                   <div class="row">
-                    <label for="name" class="col-md-2 p-3 labels">Reference No.</label>
+                    <label for="ereference" class="col-md-2 p-3 labels">Reference No.</label>
                     <div class="col-md-3 p-3">
-                      <input type="number" class="form-control text-white bg-black" id="name" name="name">
+                      <input type="number" class="form-control text-white bg-black" id="eref" name="eref">
                     </div>
                     <div class="col-md-1 p-3"></div>
-                <label for="name" class="col-md-2 p-3 labels">Transaction Type</label>
+                <label for="etrans" class="col-md-2 p-3 labels">Transaction Type</label>
                 <div class="col-md-3 p-3">
-                    <select name="trant" id="trant" class="form-control" placeholder="Select" style="background-color: black; color: white;">
+                    <select name="etrant" id="etrant" class="form-control" placeholder="Select" style="background-color: black; color: white;">
                         <option value="Select" disabled selected hidden>Select</option>
                         <option value="GOODS">GOODS</option>
                         <option value="SERVICES">SERVICES</option>
@@ -472,10 +509,10 @@ input[type="date"] {
                     </div>
                 </div>
                 <div class="row">
-                    <label for="name" class="col-md-2 p-3 labels">Billing Address</label>
+                    <label for="ebill" class="col-md-2 p-3 labels">Billing Address</label>
                     <div class="col-md-3 p-3">
                         <label class="switch">
-                            <input type="checkbox" id="transaction-type" name="transaction-type">
+                            <input type="checkbox" id="ebilladdress" name="ebilladdress">
                             <span class="slider round"></span>
                         </label>
                     </div>
@@ -483,32 +520,32 @@ input[type="date"] {
                 </div>
                 <div class="row" id="addressRow" style="display: none;">
                     <div class="col-md-9 p-3">
-                        <textarea class="form-control mt-3" id="billingAddress" name="note" placeholder="Address" style="height: 190px;"></textarea>
+                        <textarea class="form-control mt-3" id="billingAddress" name="ebilling" placeholder="Address" style="height: 190px;"></textarea>
                     </div>
                 </div>
                 
 
                   <div class="row">
-                    <label for="ac_no" class="col-md-2 p-3 labels">Transportation </label>
+                    <label for="etransport" class="col-md-2 p-3 labels">Transportation </label>
                     <div class="col-md-9 p-3  d-flex align-items-center">
-                        <select name="trant" id="trant" class="form-control" style="background-color: black; color: white;">
+                        <select name="etransportation" id="etransportation" class="form-control" style="background-color: black; color: white;">
                             <option value="" disabled selected hidden>Select</option>
                             <option value="Bus">Bus</option>
                             <option value="Car">Car</option>
                             <option value="Train">Train</option>
                         </select>
-                      <a  class="btn btn-outline-warning py-2 ml-2" style="cursor: pointer; height: 38px;" >+</a>
+                      <a  class="btn btn-outline-warning py-2 ml-2" data-target="#newtransport" data-toggle="modal" style="cursor: pointer; height: 38px;" >+</a>
                     </div>
                   </div>
                   <div class="row">
-                    <label for="name" class="col-md-2 p-3 labels">Vehicle No.</label>
+                    <label for="vehno" class="col-md-2 p-3 labels">Vehicle No.</label>
                     <div class="col-md-3 p-3">
-                      <input type="number" class="form-control text-white bg-black" id="name" name="name">
+                      <input type="number" class="form-control text-white bg-black" id="evehno" name="evehno">
                     </div>
                     <div class="col-md-1 p-3"></div>
-                    <label for="name" class="col-md-2 p-3 labels">Kilometer</label>
+                    <label for="kilm" class="col-md-2 p-3 labels">Kilometer</label>
                     <div class="col-md-3 p-3">
-                      <input type="text" class="form-control text-white bg-black"  id="name" name="name">
+                      <input type="text" class="form-control text-white bg-black"  id="ekilm" name="ekilm">
                     </div>
                   </div>
                 <br>
@@ -610,6 +647,61 @@ input[type="date"] {
       </div>
   </div>
 </div> 
+<!--------------- Transportation Seciton Start ----------------->
+
+<div class="modal fade" id="newtransport">
+    <div class="modal-dialog modal-md">
+    <div class="modal-content" style="background: rgb(32, 35, 37);border-radius: 20px;">
+        <div class="modal-header " style="background: rgb(32, 35, 37);">
+            <h3 class="m-3 text-uppercase" style="color: white;">Add Transportation</h3>
+            <button type="button" class="close btn btn-danger" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body" style="background: rgb(32, 35, 37);">
+        <div class="card p-3 m-3" style="background-color: #141414a2;">
+            <form action="" method="post" class="needs-validation" novalidate autocomplete="off" id="modalTransport">
+            
+
+
+            <div class="row mt-2">
+
+                <div class="col-lg-12 col-md-12 col-sm-12 mt-2">
+                    <label for="transname" style="color: white">Transportation *</label>
+
+                <input type="text " class="form-control text-dark bg-light mt-2" id="tname" name="trans_name" autocapitalize="characters" required> 
+                <span id="message-id" class="mt-1 text-danger" style="font-size: 10px;"></span> 
+                <span id="success-message-id" class=" mt-1 text-success" style="font-size: 10px;"></span>    
+                </div>
+
+                
+                <div class="col-md-2 mt-2"></div>
+
+            </div>
+            
+            <div class="row mt-5">
+                <div class="col-lg-12 col-md-12 col-sm-12">
+                <div class="d-flex">
+                    <button class="btn save_btn rounded-pill text-grey w-50 my-1 mx-1 btn-outline-warning "
+                    type="submit" data-dismiss="modal" id="termSave">Save
+                    </button> 
+                    
+
+                    <button type="button" class="close btn save_btn rounded-pill text-grey w-50 my-1 mx-1 btn-outline-warning" 
+                    data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">Cancel</span>
+                    </button>
+                </div>
+                </div>
+            </div>
+            </form>
+        </div>
+        </div>
+    </div>
+    </div>  
+</div> 
+
+<!------------------- Transportation  Section End -------------->
 <!-- New Customer Modal -->
 
 <div class="modal fade" id="newCustomer">
@@ -1938,7 +2030,7 @@ input[type="date"] {
 <!-- Transaction typeSCRIPT END -->
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        const checkbox = document.getElementById('transaction-type');
+        const checkbox = document.getElementById('ebilladdress');
         const addressRow = document.getElementById('addressRow');
 
         checkbox.addEventListener('change', function () {
