@@ -1021,4 +1021,5 @@ class Eway_bill_history(models.Model):
 
 class Eway_bill_transportation(models.Model):
     transport = models.CharField(max_length=220,null=True,blank=True)
+    company=models.ForeignKey(CompanyDetails,null=True,on_delete=models.CASCADE)
     #-----------------Eway End -----------------------------

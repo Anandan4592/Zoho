@@ -17469,6 +17469,8 @@ def eway_new(request):
                 accounts=Chart_of_Accounts.objects.filter(company=dash_details.company)
                 comp_payment_terms=Company_Payment_Term.objects.filter(company=dash_details)
                 price_lists=PriceList.objects.filter(company=dash_details,type='Sales',status='Active')
+                ecustomer = Customer.objects.filter(company=dash_details)
+                etransp = Eway_bill_transportation.objects.filter(company=dash_details)
                 context = {
                     'details': dash_details,
                     'units': units,
@@ -17476,7 +17478,10 @@ def eway_new(request):
                     'accounts':accounts,
                     'comp_payment_terms':comp_payment_terms,
                     'price_lists':price_lists,
-                    'tod':tod
+                    'tod':tod,
+                    'ecustomer':ecustomer,
+                    'item':item,
+                    'etransp':etransp
                 }
                 return render(request,'zohomodules/eway_bill/eway_new.html',context)
     if log_details.user_type == 'Company':
@@ -17489,6 +17494,7 @@ def eway_new(request):
             comp_payment_terms=Company_Payment_Term.objects.filter(company=dash_details)
             price_lists=PriceList.objects.filter(company=dash_details,type='Sales',status='Active')
             ecustomer = Customer.objects.filter(company=dash_details)
+            etransp = Eway_bill_transportation.objects.filter(company=dash_details)
             context = {
                     'details': dash_details,
                     'units': units,
@@ -17497,7 +17503,9 @@ def eway_new(request):
                     'comp_payment_terms':comp_payment_terms,
                     'price_lists':price_lists,
                     'accounts':accounts,
-                    'ecustomer':ecustomer
+                    'ecustomer':ecustomer,
+                    'item':item,
+                    'etransp':etransp
             }
     
             return render(request, 'zohomodules/eway_bill/eway_new.html',context)
@@ -17814,67 +17822,147 @@ def eway_create_item(request):
                 return JsonResponse({'success': True})
     return JsonResponse({'error': 'Invalid request'})
 
-def eway_newbill_create(request):
-    if 'login_id' in request.session:
-        if request.session.has_key('login_id'):
-            log_id = request.session['login_id']
-           
-        else:
-            return redirect('/')
+def eitem_dropdown(request):                                                               
+    login_id = request.session['login_id']
+    log_user = LoginDetails.objects.get(id=login_id)
+    if log_user.user_type == 'Company':
+            dash_details = CompanyDetails.objects.get(login_details=log_user)
+            options = {}
+            option_objects = Items.objects.filter(company=dash_details)
+            for option in option_objects:
+                item_name=option.item_name
+            options[option.id] = [item_name,f"{item_name}"]
+            return JsonResponse(options)
+      
+
+    elif log_user.user_type == 'Staff':
+            dash_details = StaffDetails.objects.get(login_details=log_user)
+            options = {}
+            option_objects = Items.objects.filter(company=dash_details.company)
+            for option in option_objects:
+                item_name=option.item_name
+            options[option.id] = [item_name,f"{item_name}"]
+            return JsonResponse(options)
+
+def cust_dropdown(request):                                                               
+    login_id = request.session['login_id']
+    log_user = LoginDetails.objects.get(id=login_id)
+    if log_user.user_type == 'Company':
+            dash_details = CompanyDetails.objects.get(login_details=log_user)
+            options = {}
+            option_objects = Customer.objects.filter(company=dash_details)
+            for option in option_objects:
+                customer_display_name=option.customer_display_name
+            options[option.id] = [customer_display_name,f"{customer_display_name}"]
+            return JsonResponse(options)
+      
+
+    elif log_user.user_type == 'Staff':
+            dash_details = StaffDetails.objects.get(login_details=log_user)
+            options = {}
+            option_objects = Customer.objects.filter(company=dash_details.company)
+            for option in option_objects:
+                customer_display_name=option.customer_display_name
+            options[option.id] = [customer_display_name,f"{customer_display_name}"]
+            return JsonResponse(options)
+
+
     
-        log_details= LoginDetails.objects.get(id=log_id)
-        if log_details.user_type=='Staff':
-            dash_details = StaffDetails.objects.get(login_details=log_details)
-            comp_details=CompanyDetails.objects.get(id=dash_details.company.id)
+# create transport
+def add_transport(request):                                                               
+    login_id = request.session['login_id']
+    log_user = LoginDetails.objects.get(id=login_id)
 
-        else:    
-            dash_details = CompanyDetails.objects.get(login_details=log_details)
-            comp_details=CompanyDetails.objects.get(login_details=log_details)
-
+    if log_user.user_type == 'Company':
+        if request.method == 'POST':
+            c = CompanyDetails.objects.get(login_details=login_id)
+            transport = request.POST['trans_name']
             
-        allmodules= ZohoModules.objects.get(company=comp_details,status='New')
-    log_details= LoginDetails.objects.get(id=login_id)
-    if log_details.user_type == 'Staff':
-                dash_details = StaffDetails.objects.get(login_details=log_details)
-                item=Items.objects.filter(company=dash_details.company)
-                tod = datetime.now().strftime('%Y-%m-%d')
-                allmodules= ZohoModules.objects.get(company=dash_details.company,status='New')
-                units = Unit.objects.filter(company=dash_details.company)
-                accounts=Chart_of_Accounts.objects.filter(company=dash_details.company)
-                comp_payment_terms=Company_Payment_Term.objects.filter(company=dash_details)
-                price_lists=PriceList.objects.filter(company=dash_details,type='Sales',status='Active')
-                context = {
-                    'details': dash_details,
-                    'units': units,
-                    'allmodules': allmodules,
-                    'accounts':accounts,
-                    'comp_payment_terms':comp_payment_terms,
-                    'price_lists':price_lists,
-                    'tod':tod
-                }
-                return render(request,'zohomodules/eway_bill/eway_new.html',context)
-    if log_details.user_type == 'Company':
-            dash_details = CompanyDetails.objects.get(login_details=log_details)
-            item=Items.objects.filter(company=dash_details)
-            tod = datetime.now().strftime('%Y-%m-%d')
-            allmodules= ZohoModules.objects.get(company=dash_details,status='New')
-            units = Unit.objects.filter(company=dash_details)
-            accounts=Chart_of_Accounts.objects.filter(company=dash_details)
-            comp_payment_terms=Company_Payment_Term.objects.filter(company=dash_details)
-            price_lists=PriceList.objects.filter(company=dash_details,type='Sales',status='Active')
-            ecustomer = Customer.objects.filter(company=dash_details)
-            context = {
-                    'details': dash_details,
-                    'units': units,
-                    'allmodules': allmodules,
-                    'tod':tod,
-                    'comp_payment_terms':comp_payment_terms,
-                    'price_lists':price_lists,
-                    'accounts':accounts,
-                    'ecustomer':ecustomer
-            }
+            if Eway_bill_transportation.objects.filter(transport=transport, company=c).exists():
+                return JsonResponse({"message": "error"})
+            else:
+                trans = Eway_bill_transportation(transport=transport, company=c)  
+                trans.save()  
+                return JsonResponse({"message": "success"})
+
+    elif log_user.user_type == 'Staff':
+        if request.method == 'POST':
+            staff = LoginDetails.objects.get(id=login_id)
+            sf = StaffDetails.objects.get(login_details=staff)
+            c = sf.company
+            transport = request.POST['trans_name']
+            
+            if Eway_bill_transportation.objects.filter(transport=transport, company=c).exists():
+                return JsonResponse({"message": "error"})
+            else:
+                trans = Eway_bill_transportation(transport=transport, company=c)  
+                trans.save()  
+                return JsonResponse({"message": "success"})
+
+    return JsonResponse({"message": "success"})
+# create unit
+
+
     
-            return render(request, 'zohomodules/eway_bill/eway_new.html',context)
+def transport_dropdown(request):                                                               
+    login_id = request.session['login_id']
+    log_user = LoginDetails.objects.get(id=login_id)
+    if log_user.user_type == 'Company':
+            dash_details = CompanyDetails.objects.get(login_details=log_user)
+            options = {}
+            option_objects = Eway_bill_transportation.objects.filter(company=dash_details)
+            for option in option_objects:
+                transport=option.transport
+            options[option.id] = [transport,f"{transport}"]
+            return JsonResponse(options)
+      
+
+    elif log_user.user_type == 'Staff':
+            dash_details = StaffDetails.objects.get(login_details=log_user)
+            options = {}
+            option_objects = Eway_bill_transportation.objects.filter(company=dash_details.company)
+            for option in option_objects:
+                transport=option.transport
+            options[option.id] = [transport,f"{transport}"]
+            return JsonResponse(options)
+
+def filter_customer_details(request):
+    login_id = request.session['login_id']
+    log_user = LoginDetails.objects.get(id=login_id)
+    if log_user.user_type == 'Company':
+        if request.method == 'POST':
+            customer_name = request.POST.get('customer_name')
+            try:
+                customer = Customer.objects.filter(customer_display_name=customer_name).first()
+                if customer:
+                    data = {
+                        'customer_email': customer.customer_email,
+                        'gst_treatment': customer.GST_treatement
+                    }
+                    return JsonResponse(data)
+                else:
+                    return JsonResponse({'error': 'Customer not found'}, status=404)
+            except Customer.DoesNotExist:
+                return JsonResponse({'error': 'Customer not found'}, status=404)
+        else:
+            return JsonResponse({'error': 'Invalid request method'}, status=400)
+    elif log_user.user_type == 'Staff':
+        if request.method == 'POST':
+            customer_name = request.POST.get('customer_name')
+            try:
+                customer = Customer.objects.filter(customer_display_name=customer_name).first()
+                if customer:
+                    data = {
+                        'customer_email': customer.customer_email,
+                        'gst_treatment': customer.GST_treatement
+                    }
+                    return JsonResponse(data)
+                else:
+                    return JsonResponse({'error': 'Customer not found'}, status=404)
+            except Customer.DoesNotExist:
+                return JsonResponse({'error': 'Customer not found'}, status=404)
+        else:
+            return JsonResponse({'error': 'Invalid request method'}, status=400)
 
 #----------------------End-----------------
 def check_journal_num_valid2(request):

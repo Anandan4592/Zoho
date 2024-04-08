@@ -427,7 +427,8 @@ input[type="date"] {
                         <div class="col-md-3 p-3 d-flex align-items-center">
                             <select name="ename" class="form-control" id="ename"  style="background-color: black; color: white;border-radius: 5px;"  >
                                 {% for custo in ecustomer %}
-                                  <option value={{custo.id}}>{{custo.customer_display_name}}</option>
+                                  <option value="" disabled selected hidden>Select</option>
+                                  <option value={{custo.id}} >{{custo.customer_display_name}}</option>
                                 {% endfor %}
                               </select>
                               <script>
@@ -528,12 +529,18 @@ input[type="date"] {
                   <div class="row">
                     <label for="etransport" class="col-md-2 p-3 labels">Transportation </label>
                     <div class="col-md-9 p-3  d-flex align-items-center">
-                        <select name="etransportation" id="etransportation" class="form-control" style="background-color: black; color: white;">
-                            <option value="" disabled selected hidden>Select</option>
-                            <option value="Bus">Bus</option>
-                            <option value="Car">Car</option>
-                            <option value="Train">Train</option>
-                        </select>
+                       
+                            <select name="etransportation" class="form-control" id="etransportation"  style="background-color: black; color: white"  >
+                                {% for etr in etransp %}
+                                  <option value="" disabled selected hidden>Select</option>
+                                  <option value={{etr.id}}>{{etr.transport}}</option>
+                                {% endfor %}
+                              </select>
+                              <script>
+                               $(document).ready(function() {
+                                    $('#etransportation').select2();
+                                });
+                                </script>       
                       <a  class="btn btn-outline-warning py-2 ml-2" data-target="#newtransport" data-toggle="modal" style="cursor: pointer; height: 38px;" >+</a>
                     </div>
                   </div>
@@ -549,8 +556,7 @@ input[type="date"] {
                     </div>
                   </div>
                 <br>
-                <input type="submit" class="btn save_btn mt-2 my-4 mx-2" style="background-color: chocolate; color: white;" value="SAVE" id="save">
-                <input class="btn save_btn my-4 mt-2" style="background-color: chocolate; color: white;" type="reset" value="RESET" id="reset">
+               
                 <div class="row  ">
                     <div class="col-md-12 table-responsive-md mt-3">
                         <table id="etbl" class="table text-white table-bordered" >
@@ -569,7 +575,13 @@ input[type="date"] {
                         </thead>
                         <tbody>
                             <tr>
-                                <td><input type="text" class="form-control border-1 bg-transparent text-white"></td>
+                                <td style="width: 7rem;"><select name="iname" class="form-control" id="iname"  style="background-color: black; color: white;border-radius: 5px;"  >
+                                    {% for eitem in item %}
+                                      
+                                      <option value={{eitem.id}}>{{eitem.item_name}}</option>
+                                    {% endfor %}
+                                  </select>
+                                </td>
                                 <td><input type="text" class="form-control border-1 bg-transparent text-white"></td>
                                 <td><input type="text" class="form-control border-1 bg-transparent text-white"></td>
                                 <td><input type="text" class="form-control border-1 bg-transparent text-white"></td>
@@ -640,7 +652,8 @@ input[type="date"] {
                         </div>
                     </div>
                   </div>
-                  <button type="submit" class="btn save_btn mt-2 my-4 mx-2" style="background-color: chocolate; color: white;" >Save</button>
+                  <input type="submit" class="btn save_btn mt-2 my-4 mx-2" style="background-color: chocolate; color: white;" value="SAVE" id="save">
+                  <input class="btn save_btn my-4 mt-2" style="background-color: chocolate; color: white;" type="reset" value="RESET" id="reset">
             </form>
             </div>
           </div>
@@ -669,7 +682,7 @@ input[type="date"] {
                 <div class="col-lg-12 col-md-12 col-sm-12 mt-2">
                     <label for="transname" style="color: white">Transportation *</label>
 
-                <input type="text " class="form-control text-dark bg-light mt-2" id="tname" name="trans_name" autocapitalize="characters" required> 
+                <input type="text " class="form-control text-dark bg-light mt-2" id="trname" name="trans_name" autocapitalize="characters" required> 
                 <span id="message-id" class="mt-1 text-danger" style="font-size: 10px;"></span> 
                 <span id="success-message-id" class=" mt-1 text-success" style="font-size: 10px;"></span>    
                 </div>
@@ -683,7 +696,7 @@ input[type="date"] {
                 <div class="col-lg-12 col-md-12 col-sm-12">
                 <div class="d-flex">
                     <button class="btn save_btn rounded-pill text-grey w-50 my-1 mx-1 btn-outline-warning "
-                    type="submit" data-dismiss="modal" id="termSave">Save
+                    type="submit" data-dismiss="modal" id="transportsave">Save
                     </button> 
                     
 
@@ -1898,6 +1911,83 @@ input[type="date"] {
 
 
   <!-- SCRIPTS -->
+  <script>
+    $(document).ready(function() {
+    $('#ename').change(function() {
+        var customerName = $(this).val();
+        if (customerName) {
+            $.ajax({
+                url: '/filter_customer_details/',
+                method: 'POST',
+                data: { customer_name: customerName },
+                success: function(response) {
+                    $('#ewayemail').val(response.customer_email || '');
+                    $('#egsttreat').val(response.gst_treatment || '');
+                },
+                error: function(xhr, status, error) {
+                    console.error(error);
+                    // Handle error
+                }
+            });
+        }
+    });
+});
+
+  </script>
+   <!-- Transport SCRIPT -->
+   <script>
+        
+        $(document).on("click", "#transportsave", function(event) {
+  event.preventDefault(); // Prevent the default form submission
+
+  $.ajax({
+    type: 'POST',
+    url: "{% url 'add_transport' %}",
+    data: {
+      trans_name: $("#trname").val(),  // Corrected key name
+      csrfmiddlewaretoken: '{{ csrf_token }}'
+    },
+    success: function(response) {
+      if (response.message === 'success') {
+        document.getElementById("modalTransport").reset();
+        reloadtrans();
+      } else {
+        $("#success-message-id").text("");  // Clear any success message
+        $("#message-id").text("Transportation with the same name exists");  // Display error message
+      }
+    },
+  });
+});
+    
+    
+    
+     
+      
+      
+      function reloadtrans() {
+    
+      $.ajax({
+        url: "{% url 'transport_dropdown' %}",
+        type: "GET",
+        dataType: "json",
+        data: $(this).serialize(),
+        csrfmiddlewaretoken: '{{ csrf_token }}',
+      
+        success: function(data) {
+          var dropdown = $('#etransportation');
+    
+          $.each(data, function(key, value) {
+       
+              dropdown.append($('<option></option>').attr('value', key).text(value[1]).val(key));
+    
+          });
+    
+        },
+     
+      });
+      }
+      </script>
+       <!-- Transport SCRIPT END -->
   <!-- add new item ajax  script start -->
  
   <script>
@@ -1919,6 +2009,7 @@ input[type="date"] {
                         var modal = document.getElementById('newitem');
                         modal.style.display = 'none';
                         $('.modal-backdrop').remove(); 
+                        reloadeitem();
                         // You can add any additional logic here, like updating the item list, etc.
                     }
                 },
@@ -1929,6 +2020,28 @@ input[type="date"] {
             });
         });
     });
+    function reloadeitem() {
+            
+            $.ajax({
+              url: "{% url 'eitem_dropdown' %}",
+              type: "GET",
+              dataType: "json",
+              data: $(this).serialize(),
+              csrfmiddlewaretoken: '{{ csrf_token }}',
+            
+              success: function(data) {
+                var dropdown = $('#iname');
+          
+                $.each(data, function(key, value) {
+             
+                    dropdown.append($('<option></option>').attr('value', key).text(value[1]).val(key));
+          
+                });
+          
+              },
+           
+            });
+            }
 </script>
 
 
@@ -1968,6 +2081,7 @@ input[type="date"] {
                 // Hide the modal by setting its display property to "none"
                 modal.style.display = 'none';
                 $('.modal-backdrop').remove(); 
+                reloadcust();
 
             },
             error: function(xhr, status, error) {
@@ -1977,6 +2091,28 @@ input[type="date"] {
         });
     });
 });
+function reloadcust() {
+            
+            $.ajax({
+              url: "{% url 'cust_dropdown' %}",
+              type: "GET",
+              dataType: "json",
+              data: $(this).serialize(),
+              csrfmiddlewaretoken: '{{ csrf_token }}',
+            
+              success: function(data) {
+                var dropdown = $('#ename');
+          
+                $.each(data, function(key, value) {
+             
+                    dropdown.append($('<option></option>').attr('value', key).text(value[1]).val(key));
+          
+                });
+          
+              },
+           
+            });
+            }
 </script>
 <!-- add new customer  script end-->
   <!-- eway-table start-->
@@ -1987,18 +2123,38 @@ input[type="date"] {
     }
 
     document.querySelector('.eadd_another').addEventListener('click', function() {
-        var table = document.getElementById('etbl').getElementsByTagName('tbody')[0]; // Corrected index to [0]
+        var table = document.getElementById('etbl').getElementsByTagName('tbody')[0];
         var newRow = table.insertRow(table.rows.length);
 
-        for (var i = 0; i < 7; i++) { // Changed the loop to 7 since there are 7 cells in the row
-            var cell = newRow.insertCell(i);
-            cell.innerHTML = '<input type="text" class="form-control border-1 bg-transparent text-white" name="dynamic[]">';
-        }
+        var cell1 = newRow.insertCell(0); // Item column
+        var cell2 = newRow.insertCell(1); // HSN column
+        var cell3 = newRow.insertCell(2); // Quantity column
+        var cell4 = newRow.insertCell(3); // Rate column
+        var cell5 = newRow.insertCell(4); // Discount column
+        var cell6 = newRow.insertCell(5); // Tax column
+        var cell7 = newRow.insertCell(6); // Amount column
+        var cell8 = newRow.insertCell(7); // Action column
 
-        var deleteCell = newRow.insertCell(7); // Changed to 7 for consistency
-        deleteCell.innerHTML = '<button type="button" class="btn btn-danger text-center" onclick="deleteContact(this)">Delete</button>';
+        // Add select dropdown for Item column
+        var selectHTML = '<select name="iname" class="form-control" style="background-color: black; color: white; border-radius: 5px;">';
+        selectHTML += '<option value="" disabled selected hidden>Select</option>';
+        selectHTML += '{% for eitem in item %}';
+        selectHTML += '<option value="{{eitem.id}}">{{eitem.item_name}}</option>';
+        selectHTML += '{% endfor %}';
+        selectHTML += '</select>';
+        cell1.innerHTML = selectHTML;
+
+        // Add input fields for other columns
+        cell2.innerHTML = '<input type="text" class="form-control border-1 bg-transparent text-white">';
+        cell3.innerHTML = '<input type="text" class="form-control border-1 bg-transparent text-white">';
+        cell4.innerHTML = '<input type="text" class="form-control border-1 bg-transparent text-white">';
+        cell5.innerHTML = '<input type="text" class="form-control border-1 bg-transparent text-white">';
+        cell6.innerHTML = '<input type="text" class="form-control border-1 bg-transparent text-white">';
+        cell7.innerHTML = '<input type="text" class="form-control border-1 bg-transparent text-white">';
+        cell8.innerHTML = '<button type="button" class="btn btn-danger text-center" onclick="deleteContact(this)">Delete</button>';
     });
 </script>
+
  <!-- eway-table end-->
     <!-- Transaction type SCRIPT -->
   <script>

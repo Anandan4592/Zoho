@@ -447,6 +447,11 @@ urlpatterns = [
     path('zohomodules/eway_bill/eway_new',views.eway_new,name='eway_new'),
     path('eway_customer_create',views.eway_customer_create,name='eway_customer_create'),
     path('eway_create_item',views.eway_create_item,name='eway_create_item'),
+    path('cust_dropdown',views.cust_dropdown,name = 'cust_dropdown'),
+    path('eitem_dropdown',views.eitem_dropdown,name = 'eitem_dropdown'),
+    path('add_transport',views.add_transport,name = 'add_transport'),
+    path('transport_dropdown',views.transport_dropdown,name = 'transport_dropdown'),
+    path('filter_customer_details',views.filter_customer_details,name = 'filter_customer_details'),
  #-------------------------------------eway end-------------------------------------#
     re_path(r'^static/(?P<path>.*)$', serve,{'document_root': settings.STATIC_ROOT}),
 ]
