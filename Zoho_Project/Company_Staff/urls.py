@@ -451,7 +451,7 @@ urlpatterns = [
     path('eitem_dropdown',views.eitem_dropdown,name = 'eitem_dropdown'),
     path('add_transport',views.add_transport,name = 'add_transport'),
     path('transport_dropdown',views.transport_dropdown,name = 'transport_dropdown'),
-    path('filter_customer_details',views.filter_customer_details,name = 'filter_customer_details'),
+    path('add_eway',views.add_eway,name = 'add_eway'),
  #-------------------------------------eway end-------------------------------------#
     re_path(r'^static/(?P<path>.*)$', serve,{'document_root': settings.STATIC_ROOT}),
 ]

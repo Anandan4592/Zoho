@@ -17926,43 +17926,115 @@ def transport_dropdown(request):
             options[option.id] = [transport,f"{transport}"]
             return JsonResponse(options)
 
-def filter_customer_details(request):
-    login_id = request.session['login_id']
-    log_user = LoginDetails.objects.get(id=login_id)
-    if log_user.user_type == 'Company':
-        if request.method == 'POST':
-            customer_name = request.POST.get('customer_name')
-            try:
-                customer = Customer.objects.filter(customer_display_name=customer_name).first()
-                if customer:
-                    data = {
-                        'customer_email': customer.customer_email,
-                        'gst_treatment': customer.GST_treatement
-                    }
-                    return JsonResponse(data)
-                else:
-                    return JsonResponse({'error': 'Customer not found'}, status=404)
-            except Customer.DoesNotExist:
-                return JsonResponse({'error': 'Customer not found'}, status=404)
+        
+def add_eway(request):
+   
+    if 'login_id' in request.session:
+        if request.session.has_key('login_id'):
+            log_id = request.session['login_id']
+           
         else:
-            return JsonResponse({'error': 'Invalid request method'}, status=400)
-    elif log_user.user_type == 'Staff':
+            return redirect('/')
+    
+        log_details= LoginDetails.objects.get(id=log_id)
+        if log_details.user_type=='Staff':
+            dash_details = StaffDetails.objects.get(login_details=log_details)
+            comp_details=CompanyDetails.objects.get(id=dash_details.company.id)
+
+        else:    
+            dash_details = CompanyDetails.objects.get(login_details=log_details)
+            comp_details=CompanyDetails.objects.get(login_details=log_details)
+
+            
+        allmodules= ZohoModules.objects.get(company=comp_details,status='New')
+
+        
+
+       
         if request.method == 'POST':
-            customer_name = request.POST.get('customer_name')
-            try:
-                customer = Customer.objects.filter(customer_display_name=customer_name).first()
-                if customer:
-                    data = {
-                        'customer_email': customer.customer_email,
-                        'gst_treatment': customer.GST_treatement
-                    }
-                    return JsonResponse(data)
-                else:
-                    return JsonResponse({'error': 'Customer not found'}, status=404)
-            except Customer.DoesNotExist:
-                return JsonResponse({'error': 'Customer not found'}, status=404)
+            doc_type = request.POST.get('edoc')
+            trans_sub_type = request.POST.get('etst')
+            customer_id = request.POST.get('ename')
+            bill_address = request.POST.get('eaddress')
+            bill_number = request.POST.get('einvoice')
+            reference_no = request.POST.get('eref')
+            date = request.POST.get('edate')
+            trans_type = request.POST.get('etrant')
+            place_of_supply = request.POST.get('eplace')
+            transportation = request.POST.get('etransportation')
+            kilometers = request.POST.get('ekilm')
+            vehicle_no = request.POST.get('evehno')
+            description = request.POST.get('note')
+            doc = request.FILES.get('file')
+            sub_total = request.POST.get('subtotal')
+            cgst = request.POST.get('cgst')
+            sgst = request.POST.get('sgst')
+            igst = request.POST.get('igst')
+            shipping = request.POST.get('ship')
+            adjustment = request.POST.get('adj')
+            grand_total = request.POST.get('grandtotal')
+            
+            # Create Eway instance
+            eway = Eway.objects.create(
+                doc_type=doc_type,
+                trans_sub_type=trans_sub_type,
+                customer_id=customer_id,
+                bill_address=bill_address,
+                bill_number=bill_number,
+                reference_no=reference_no,
+                date=date,
+                trans_type=trans_type,
+                place_of_supply=place_of_supply,
+                transportation=transportation,
+                kilometers=kilometers,
+                vehicle_no=vehicle_no,
+                description=description,
+                doc=doc,
+                sub_total=sub_total,
+                CGST=cgst,
+                SGST=sgst,
+                IGST=igst,
+                shipping=shipping,
+                adjustment=adjustment,
+                grand_total=grand_total,
+                company_id=comp_details.id,  # Provide your company ID here
+                logindetails_id=log_details.id  # Provide your login details ID here
+            )
+            
+            # Process items data and save to Eway_bill_items table
+            items_count = int(request.POST.get('item_count', 0))
+            for i in range(items_count):
+                item = request.POST.get(f'iname_{i}')
+                hsn = request.POST.get(f'itemhsn_{i}')
+                quantity = request.POST.get(f'itemquantity_{i}')
+                price = request.POST.get(f'itemrate_{i}')
+                tax_rate = request.POST.get(f'itemtax_{i}')
+                discount = request.POST.get(f'itemdiscount_{i}')
+                total = request.POST.get(f'itemamount_{i}')
+                
+                # Create Eway_bill_items instance
+                Eway_bill_items.objects.create(
+                    items=item,
+                    hsn=hsn,
+                    quantity=quantity,
+                    price=price,
+                    tax_rate=tax_rate,
+                    discount=discount,
+                    total=total,
+                    eway=eway,
+                    company_id=comp_details.id,  # Provide your company ID here
+                    logindetails_id=log_details.id  # Provide your login details ID here
+                )
+            
+                messages.success(request, 'Eway bill created successfully!')   
+
+                return redirect('eway_main')
+        
         else:
-            return JsonResponse({'error': 'Invalid request method'}, status=400)
+            messages.error(request, 'Some error occurred !')   
+
+            return redirect('eway_new')
+    return redirect('eway_main')
 
 #----------------------End-----------------
 def check_journal_num_valid2(request):

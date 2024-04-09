@@ -395,7 +395,7 @@ input[type="date"] {
             <div class="card mb-5 p-5" style="background-color: black; border-radius: 1vh;">
               <h1 class="mb-0 text-uppercase text-right" style="color: white; font-weight: bolder;">New &nbsp;E-way Bill</h1><br>
               <hr class="text-warning">
-              <form action="" method="post" enctype="multipart/form-data"id="myForm">
+              <form action="{% url 'add_eway' %}" method="post" enctype="multipart/form-data"id="myForm">
                 {% csrf_token %}
                 <div class="row">
                   <label for="doctype" class="col-md-2 p-3 labels">Document Type*</label>
@@ -582,12 +582,12 @@ input[type="date"] {
                                     {% endfor %}
                                   </select>
                                 </td>
-                                <td><input type="text" class="form-control border-1 bg-transparent text-white"></td>
-                                <td><input type="text" class="form-control border-1 bg-transparent text-white"></td>
-                                <td><input type="text" class="form-control border-1 bg-transparent text-white"></td>
-                                <td><input type="text" class="form-control border-1 bg-transparent text-white"></td>
-                                <td><input type="text" class="form-control border-1 bg-transparent text-white"></td>
-                                <td><input type="text" class="form-control border-1 bg-transparent text-white"></td>
+                                <td><input name="itemhsn" type="text" class="form-control border-1 bg-transparent text-white"></td>
+                                <td><input name="itemquantity" type="text" class="form-control border-1 bg-transparent text-white"></td>
+                                <td><input name="itemrate" type="text" class="form-control border-1 bg-transparent text-white"></td>
+                                <td><input name="itemdiscount" type="text" class="form-control border-1 bg-transparent text-white"></td>
+                                <td><input name="itemtax" type="text" class="form-control border-1 bg-transparent text-white"></td>
+                                <td><input name="itemamount" type="text" class="form-control border-1 bg-transparent text-white"></td>
                             <td><button type="button" class="btn btn-danger text-center" onclick="deleteContact(this)">Delete</button></td>
                             </tr>
                         </tbody>
@@ -611,27 +611,18 @@ input[type="date"] {
                             <div class="row container-fluid p-2 m-0">
                                 <div class="col-sm-4 mt-2"><label class="text-center">Sub Total</label></div>
                                 <div class="col-sm-1 mt-2">:</div>
-                                <div class="col-sm-7 "><input type="number" step="any" name='subtotal' value=0.00 readonly  class="form-control" id="sub_total"></div>
+                                <div class="col-sm-7 "><input type="number" step="any" name='subtotal' value=0.00   class="form-control" id="sub_total"></div>
                             </div>
                             <div class="row container-fluid p-2 m-0" id="taxamountIGST" style="display: flex;">
                                 <div class="col-sm-4 mt-2"><label for="a" class="text-center">IGST</label></div>
                                 <div class="col-sm-1 mt-2">:</div>
-                                <div class="col-sm-7 "><input type="number" name='igst' step="any" id="igstAmount1" value=0.00 readonly  class="form-control"/></div>
+                                <div class="col-sm-7 "><input type="number" name='igst' step="any" id="igstAmount1" value=0.00   class="form-control"/></div>
                             </div>
-                            <div class="row container-fluid p-2 m-0" style="display: none;" id="taxamountCGST">
-                                <div class="col-sm-4 mt-2"><label for="a" class="text-center">CGST</label></div>
-                                <div class="col-sm-1 mt-2">:</div>
-                                <div class="col-sm-7 "><input type="number" name='cgst' step="any" id="cgstAmount1" value=0.00 readonly  class="form-control"/></div>
-                            </div>
-                            <div class="row container-fluid p-2 m-0" style="display: none;" id="taxamountSGST">
-                                <div class="col-sm-4 mt-2"><label for="a" class="text-center">SGST</label></div>
-                                <div class="col-sm-1 mt-2">:</div>
-                                <div class="col-sm-7 "><input type="number" name='sgst' step="any" id="sgstAmount1" value=0.00 readonly class="form-control"/></div>
-                            </div>
+                            
                             <div class="row container-fluid p-2 m-0">
                                 <div class="col-sm-4 mt-2"><label for="a" class="text-center">Tax Amount</label></div>
                                 <div class="col-sm-1 mt-2">:</div>
-                                <div class="col-sm-7 "><input type="number" step="any" name='taxamount' id="tax_amount" value=0.00 readonly  class="form-control"/></div>
+                                <div class="col-sm-7 "><input type="number" step="any" name='taxamount' id="tax_amount" value=0.00   class="form-control"/></div>
                             </div>
                             
                             <div class="row container-fluid p-2 m-0" >
@@ -647,7 +638,7 @@ input[type="date"] {
                             <div class="row container-fluid p-2 m-0">
                                 <div class="col-sm-4 mt-2"><label for="a" class="text-center text-warning">Total</label></div>
                                 <div class="col-sm-1 mt-2">:</div>
-                                <div class="col-sm-7 "><input type="number" name='grandtotal' id="grandtotal" value=0.00 readonly  class="form-control"/></div>
+                                <div class="col-sm-7 "><input type="number" name='grandtotal' id="grandtotal" value=0.00   class="form-control"/></div>
                             </div>
                         </div>
                     </div>
@@ -1911,29 +1902,40 @@ input[type="date"] {
 
 
   <!-- SCRIPTS -->
+  
   <script>
     $(document).ready(function() {
-    $('#ename').change(function() {
-        var customerName = $(this).val();
-        if (customerName) {
-            $.ajax({
-                url: '/filter_customer_details/',
-                method: 'POST',
-                data: { customer_name: customerName },
-                success: function(response) {
-                    $('#ewayemail').val(response.customer_email || '');
-                    $('#egsttreat').val(response.gst_treatment || '');
-                },
-                error: function(xhr, status, error) {
-                    console.error(error);
-                    // Handle error
-                }
-            });
+      $('#ename').change(function() {
+        var customerId = $(this).val();
+        if (customerId) {
+          // Assuming you have a JavaScript object `customersData` containing customer details
+          var customer = customersData.find(function(c) {
+            return c.id == customerId;
+          });
+          if (customer) {
+            $('#ewayemail').val(customer.customer_email);
+            $('#egsttreat').val(customer.GST_treatement);
+            $('#egstvalue').val(customer.GST_value || 'null');
+            // Update other fields as needed
+          }
         }
+      });
     });
-});
-
   </script>
+  <script>
+    var customersData = [
+      {% for customer in ecustomer %}
+        {
+          id: {{ customer.id }},
+          customer_email: "{{ customer.customer_email }}",
+          GST_treatement: "{{ customer.GST_treatement }}",
+          GST_value: "{{ customer.GST_value|default_if_none:"null" }}", // Render GST value or "null" if empty
+          // Include other customer details as needed
+        },
+      {% endfor %}
+    ];
+  </script>
+  
    <!-- Transport SCRIPT -->
    <script>
         
@@ -2145,12 +2147,12 @@ function reloadcust() {
         cell1.innerHTML = selectHTML;
 
         // Add input fields for other columns
-        cell2.innerHTML = '<input type="text" class="form-control border-1 bg-transparent text-white">';
-        cell3.innerHTML = '<input type="text" class="form-control border-1 bg-transparent text-white">';
-        cell4.innerHTML = '<input type="text" class="form-control border-1 bg-transparent text-white">';
-        cell5.innerHTML = '<input type="text" class="form-control border-1 bg-transparent text-white">';
-        cell6.innerHTML = '<input type="text" class="form-control border-1 bg-transparent text-white">';
-        cell7.innerHTML = '<input type="text" class="form-control border-1 bg-transparent text-white">';
+        cell2.innerHTML = '<input name="itemhsn" type="text" class="form-control border-1 bg-transparent text-white">';
+        cell3.innerHTML = '<input name="itemquantity" type="text" class="form-control border-1 bg-transparent text-white">';
+        cell4.innerHTML = '<input name="itemrate" type="text" class="form-control border-1 bg-transparent text-white">';
+        cell5.innerHTML = '<input name="itemdiscount" type="text" class="form-control border-1 bg-transparent text-white">';
+        cell6.innerHTML = '<input name="itemtax" type="text" class="form-control border-1 bg-transparent text-white">';
+        cell7.innerHTML = '<input name="itemamount" type="text" class="form-control border-1 bg-transparent text-white">';
         cell8.innerHTML = '<button type="button" class="btn btn-danger text-center" onclick="deleteContact(this)">Delete</button>';
     });
 </script>
@@ -2159,7 +2161,7 @@ function reloadcust() {
     <!-- Transaction type SCRIPT -->
   <script>
     document.addEventListener('DOMContentLoaded', function () {
-        const selectElement = document.getElementById('trant');
+        const selectElement = document.getElementById('etrant');
         const hsnRow = document.getElementById('hsnRow');
         const sacRow = document.getElementById('sacRow');
 
