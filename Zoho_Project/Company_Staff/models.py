@@ -977,6 +977,8 @@ class Eway(models.Model):
     reference_no = models.IntegerField(blank=True,null=True,default=0)
     date = models.DateField(auto_now_add=True, null=True, blank=True)
     trans_type = models.CharField(max_length=220,null=True,blank=True)
+    hsnno = models.CharField(max_length=220,null=True,blank=True)
+    sacno = models.CharField(max_length=220,null=True,blank=True)
     place_of_supply = models.CharField(max_length=220,null=True,blank=True)
     transportation = models.CharField(max_length=220,null=True,blank=True)
     kilometers = models.CharField(max_length=220,null=True,blank=True)

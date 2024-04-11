@@ -145,7 +145,7 @@
                     </div>
                     <div class="container-fluid">
                         <br>
-                        <table class="table table-responsive-md mt-4" id="banktable">
+                        <table class="table table-responsive-md mt-4" id="ewaytable">
                             <thead>
                                 <tr class="text-center text-white">
                                  
@@ -158,13 +158,13 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for b in bnk %}
-                                <tr class='clickable-row text-center' data-href="View/Bank/{{ b.id }}">
-                                    <td>{{ forloop.counter }}</td>
+                                {% for b in eway %}
+                                <tr class='clickable-row text-center' >
                                     <td>{{ b.date }}</td>
-                                    <td>{{ b.bnk_name }}</td>
-                                    <td>{{ b.bnk_acno }}</td>
-                                    <td> {{ b.bnk_ifsc }}</td>
+                                    <td>{{ b.trans_type }}</td>
+                                    <td>{{ b.bill_number }}</td>
+                                    <td>{{ b.customer.customer_display_name }}</td>
+                                    <td> {{ b.sub_total }}</td>
                                 </tr>
                                 {%endfor%}  
                             </tbody>
@@ -209,7 +209,7 @@
 <script>
     function sorttable(col) {
         var table, rows, switching, i, x, y, shouldSwitch;
-        table = document.getElementById("banktable");
+        table = document.getElementById("ewaytable");
         switching = true;
         
         while (switching) {
@@ -239,7 +239,7 @@
 <script>
     function filtertable(key) {
         var input, filter, table, tr, td, i, txtValue;
-        table = document.getElementById("banktable");
+        table = document.getElementById("ewaytable");
         tr = table.getElementsByTagName("tr");
 
         for (i = 0; i < tr.length; i++) {

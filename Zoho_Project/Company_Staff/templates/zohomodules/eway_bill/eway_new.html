@@ -527,8 +527,55 @@ input[type="date"] {
                 
 
                   <div class="row">
+                    <label class="col-md-2 p-3 labels" > Place of Supply*</label>
+                                
+                                <div class=" col-md-3 p-3  d-flex align-items-center">
+                                    <select name="eplace" id="PLACES" class="form-control" style="background-color: black; color: white"  >
+                                        
+                                        <option value="value" selected></option>
+                                        <option value="[AN]-Andaman And Nicobar Islands">[AN]-Andaman And Nicobar Islands</option>
+                                        <option value="[AD]-Andhra Pradesh">[AD]-Andhra Pradesh</option>
+                                        <option value="[AR]-Arunachal Pradesh">[AR]-Arunachal Pradesh	</option> 
+                                        <option value="volvo">[AS]-Assam</option>
+                                        <option value="[BR]-Bihar">[BR]-Bihar</option> 
+                                        <option value="volvo">[CH]-	Chandhigarh</option>
+                                        <option value="[CG]-Chattisgarh">[CG]-Chattisgarh</option>
+                                        <option value="[DD]-Daman Diu">[DD]-Daman Diu</option>
+                                        <option value="volvo">[DL]-	Delhi</option>
+                                        <option value="[GA]-Goa">[GA]-Goa</option> 
+                                        <option value="[GJ]-Gujarat">[GJ]-Gujarat</option>
+                                        <option value="[HR]-Haryana">[HR]-Haryana</option> 
+                                        <option value="[HP]-Himachal Pradesh">[HP]-Himachal Pradesh</option>
+                                        <option value="[JK]-Jammu And Kashmir">[JK]-Jammu And Kashmir</option>
+                                        <option value="[JH]-Jharkand">[JH]-Jharkand</option>
+                                        <option value="[KA]-Karnataka">[KA]-Karnataka</option>
+                                        <option value="[KL]-Kerala">[KL]-Kerala</option>
+                                        <option value="[LA]-Ladakh">[LA]-Ladakh</option>
+                                        <option value="[LD]-Lakshadweep">[LD]-Lakshadweep</option>
+                                        <option value="[MP]-Madhyapradesh">[MP]-Madhyapradesh</option>
+                                        <option value="[MH]-Maharashtra">[MH]-Maharashtra</option>
+                                        <option value="[MN]-Manipur">[MN]-Manipur</option>  
+                                        <option value="[ML]-Meghalaya">[ML]-Meghalaya</option>
+                                        <option value="[MZ]-Mizoram">[MZ]-Mizoram</option>
+                                        <option value="[NL]-Nagaland">[NL]-Nagaland</option> 
+                                        <option value="[NL]-Nagaland">[NL]-Nagaland</option>
+                                        <option value="[OD]-Odisha">[OD]-Odisha</option>
+                                        <option value="[PY]-Puducherry">[PY]-Puducherry</option>
+                                        <option value="[PB]-Punjab">[PB]-Punjab.</option>
+                                        <option value="[RL]-Rajasthan">[RL]-Rajasthan</option>
+                                        <option value="[SK]-Sikkim">[SK]-Sikkim</option>
+                                        <option value="[TN]-Tamilnadu">[TN]-Tamilnadu</option>
+                                        <option value="[TS]-Telenghana">[TS]-Telenghana</option>
+                                        <option value="[TR]-Tripura">[TR]-Tripura</option>
+                                        <option value="[UP]-Uttar Pradesh">[UP]-Uttar Pradesh</option>
+                                        <option value="[UK]-Utharakhand">[UK]-Utharakhand</option>
+                                        <option value="[WB]-West Bengal">[WB]-West Bengal</option>
+                                        <option value="[OT]-Other Territory">[OT]-Other Territory</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-1 p-3"></div>
                     <label for="etransport" class="col-md-2 p-3 labels">Transportation </label>
-                    <div class="col-md-9 p-3  d-flex align-items-center">
+                    <div class="col-md-3 p-3  d-flex align-items-center">
                        
                             <select name="etransportation" class="form-control" id="etransportation"  style="background-color: black; color: white"  >
                                 {% for etr in etransp %}
@@ -606,19 +653,28 @@ input[type="date"] {
                     <input class="pb-3"  id="file-upload" type="file" name="file" style="display:none;">
                   </div>            
                     <div class="col-md-1"></div>
-                    <div class="col-md-5 table-responsive-md mt-3 " id="invoiceItemsTableTotal" style="background-color:rgba(0,0,0,.4); border: 1px solid rgba(128, 128, 128, 0.6); margin-left: -2vh;">
+                    <div class="col-md-5 table-responsive-md mt-3 " id="ewayItemsTableTotal" style="background-color:rgba(0,0,0,.4); border: 1px solid rgba(128, 128, 128, 0.6); margin-left: -2vh;">
                         <div class="p-3">
                             <div class="row container-fluid p-2 m-0">
                                 <div class="col-sm-4 mt-2"><label class="text-center">Sub Total</label></div>
                                 <div class="col-sm-1 mt-2">:</div>
                                 <div class="col-sm-7 "><input type="number" step="any" name='subtotal' value=0.00   class="form-control" id="sub_total"></div>
                             </div>
-                            <div class="row container-fluid p-2 m-0" id="taxamountIGST" style="display: flex;">
+                            <div class="row container-fluid p-2 m-0" id="taxamountIGST" style="display: none;">
                                 <div class="col-sm-4 mt-2"><label for="a" class="text-center">IGST</label></div>
                                 <div class="col-sm-1 mt-2">:</div>
-                                <div class="col-sm-7 "><input type="number" name='igst' step="any" id="igstAmount1" value=0.00   class="form-control"/></div>
+                                <div class="col-sm-7 "><input type="number" name='igst' step="any" id="igstAmount"   class="form-control"/></div>
                             </div>
-                            
+                            <div class="row container-fluid p-2 m-0" style="display: none;" id="taxamountCGST">
+                                <div class="col-sm-4 mt-2"><label for="a" class="text-center">CGST</label></div>
+                                <div class="col-sm-1 mt-2">:</div>
+                                <div class="col-sm-7 mt-2"><input type="number" name='cgst' step="any" id="cgstAmount"    class="form-control"/></div>
+                            </div>
+                            <div class="row container-fluid p-2 m-0" style="display: none;" id="taxamountSGST">
+                                <div class="col-sm-4 mt-2"><label for="a" class="text-center">SGST</label></div>
+                                <div class="col-sm-1 mt-2">:</div>
+                                <div class="col-sm-7 mt-2"><input type="number" name='sgst' step="any" id="sgstAmount"   class="form-control"/></div>
+                            </div>
                             <div class="row container-fluid p-2 m-0">
                                 <div class="col-sm-4 mt-2"><label for="a" class="text-center">Tax Amount</label></div>
                                 <div class="col-sm-1 mt-2">:</div>
@@ -1898,43 +1954,105 @@ input[type="date"] {
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
+    
+    
 
 
 
   <!-- SCRIPTS -->
-  
   <script>
+    var itemsData = [
+        {% for item in item %}
+            {
+                id: {{ item.id }},
+                hsn_code: "{{ item.hsn_code|default_if_none:"" }}",
+                selling_price: "{{ item.selling_price|default_if_none:"" }}",
+                // Include other item details as needed
+            },
+        {% endfor %}
+    ];
+</script>
+
+<script>
     $(document).ready(function() {
-      $('#ename').change(function() {
-        var customerId = $(this).val();
-        if (customerId) {
-          // Assuming you have a JavaScript object `customersData` containing customer details
-          var customer = customersData.find(function(c) {
-            return c.id == customerId;
-          });
-          if (customer) {
-            $('#ewayemail').val(customer.customer_email);
-            $('#egsttreat').val(customer.GST_treatement);
-            $('#egstvalue').val(customer.GST_value || 'null');
-            // Update other fields as needed
-          }
-        }
-      });
+        $('#iname').change(function() {
+            var itemId = $(this).val();
+            if (itemId) {
+                var item = itemsData.find(function(i) {
+                    return i.id == itemId;
+                });
+                if (item) {
+                    $('input[name="itemhsn"]').val(item.hsn_code);
+                    $('input[name="itemrate"]').val(item.selling_price);
+                    // Populate other fields as needed
+                }
+            }
+        });
     });
-  </script>
+</script>
+
+  
+
+  <!-- customer details retrieving -->>
   <script>
     var customersData = [
-      {% for customer in ecustomer %}
-        {
-          id: {{ customer.id }},
-          customer_email: "{{ customer.customer_email }}",
-          GST_treatement: "{{ customer.GST_treatement }}",
-          GST_value: "{{ customer.GST_value|default_if_none:"null" }}", // Render GST value or "null" if empty
-          // Include other customer details as needed
-        },
-      {% endfor %}
+        {% for customer in ecustomer %}
+            {
+                id: {{ customer.id }},
+                customer_email: "{{ customer.customer_email }}",
+                GST_treatement: "{{ customer.GST_treatement }}",
+                GST_value: "{{ customer.GST_value|default_if_none:"null" }}", // Render GST value or "null" if empty
+                // Include other customer details as needed
+            },
+        {% endfor %}
     ];
-  </script>
+</script>
+
+<script>
+    $(document).ready(function() {
+        $('#ename').change(function() {
+            var customerId = $(this).val();
+            if (customerId) {
+                var customer = customersData.find(function(c) {
+                    return c.id == customerId;
+                });
+                if (customer) {
+                    $('#ewayemail').val(customer.customer_email);
+                    $('#egsttreat').val(customer.GST_treatement);
+                    $('#egstvalue').val(customer.GST_value || 'null');
+                    
+                   
+                }
+            }
+        });
+    });
+</script>
+<script>
+    $('#PLACES').change(function() {
+    var selectedPlaceOfSupply = $(this).val();
+    console.log(selectedPlaceOfSupply,'selectedPlaceOfSupply')
+    var customerId = $('#ename').val();
+    console.log(customerId,'customerId')
+    if (customerId) {
+        var customer = customersData.find(function(c) {
+            return c.id == customerId;
+        });
+        if (customer) {
+            if (selectedPlaceOfSupply === customer.place_of_supply) {
+    
+                $('#taxamountCGST').css('display', 'flex');
+                $('#taxamountSGST').css('display', 'flex');
+                $('#taxamountIGST').css('display', 'none');
+            } else {
+                $('#taxamountCGST').css('display', 'none');
+                $('#taxamountSGST').css('display', 'none');
+                $('#taxamountIGST').css('display', 'flex');
+            }
+        }
+    }
+});
+
+</script>
   
    <!-- Transport SCRIPT -->
    <script>
@@ -2124,38 +2242,72 @@ function reloadcust() {
         row.parentNode.removeChild(row);
     }
 
-    document.querySelector('.eadd_another').addEventListener('click', function() {
-        var table = document.getElementById('etbl').getElementsByTagName('tbody')[0];
-        var newRow = table.insertRow(table.rows.length);
+    // Function to populate item details based on selected item
+    function populateItemDetails(selectElement) {
+        var itemId = selectElement.value;
+        var item = itemsData.find(function(i) {
+            return i.id == itemId;
+        });
+        if (item) {
+            var row = selectElement.parentNode.parentNode;
+            row.querySelector('input[name="itemhsn"]').value = item.hsn_code;
+            row.querySelector('input[name="itemrate"]').value = item.selling_price;
+            // Populate other fields as needed
+        }
+    }
 
-        var cell1 = newRow.insertCell(0); // Item column
-        var cell2 = newRow.insertCell(1); // HSN column
-        var cell3 = newRow.insertCell(2); // Quantity column
-        var cell4 = newRow.insertCell(3); // Rate column
-        var cell5 = newRow.insertCell(4); // Discount column
-        var cell6 = newRow.insertCell(5); // Tax column
-        var cell7 = newRow.insertCell(6); // Amount column
-        var cell8 = newRow.insertCell(7); // Action column
+    // Event listener for item dropdown change
+    function handleItemDropdownChange() {
+        populateItemDetails(this);
+    }
 
-        // Add select dropdown for Item column
-        var selectHTML = '<select name="iname" class="form-control" style="background-color: black; color: white; border-radius: 5px;">';
-        selectHTML += '<option value="" disabled selected hidden>Select</option>';
-        selectHTML += '{% for eitem in item %}';
-        selectHTML += '<option value="{{eitem.id}}">{{eitem.item_name}}</option>';
-        selectHTML += '{% endfor %}';
-        selectHTML += '</select>';
-        cell1.innerHTML = selectHTML;
+    document.addEventListener('DOMContentLoaded', function() {
+        // Attach event listener for adding another row
+        document.querySelector('.eadd_another').addEventListener('click', function() {
+            var table = document.getElementById('etbl').getElementsByTagName('tbody')[0];
+            var newRow = table.insertRow(table.rows.length);
 
-        // Add input fields for other columns
-        cell2.innerHTML = '<input name="itemhsn" type="text" class="form-control border-1 bg-transparent text-white">';
-        cell3.innerHTML = '<input name="itemquantity" type="text" class="form-control border-1 bg-transparent text-white">';
-        cell4.innerHTML = '<input name="itemrate" type="text" class="form-control border-1 bg-transparent text-white">';
-        cell5.innerHTML = '<input name="itemdiscount" type="text" class="form-control border-1 bg-transparent text-white">';
-        cell6.innerHTML = '<input name="itemtax" type="text" class="form-control border-1 bg-transparent text-white">';
-        cell7.innerHTML = '<input name="itemamount" type="text" class="form-control border-1 bg-transparent text-white">';
-        cell8.innerHTML = '<button type="button" class="btn btn-danger text-center" onclick="deleteContact(this)">Delete</button>';
+            // Insert cells for new row
+            var cell1 = newRow.insertCell(0); // Item column
+            var cell2 = newRow.insertCell(1); // HSN column
+            var cell3 = newRow.insertCell(2); // Quantity column
+            var cell4 = newRow.insertCell(3); // Rate column
+            var cell5 = newRow.insertCell(4); // Discount column
+            var cell6 = newRow.insertCell(5); // Tax column
+            var cell7 = newRow.insertCell(6); // Amount column
+            var cell8 = newRow.insertCell(7); // Action column
+
+            // Add select dropdown for Item column
+            var selectHTML = '<select name="iname" class="form-control" style="background-color: black; color: white; border-radius: 5px;">';
+            selectHTML += '<option value="" disabled selected hidden>Select</option>';
+            selectHTML += '{% for eitem in item %}';
+            selectHTML += '<option value="{{eitem.id}}">{{eitem.item_name}}</option>';
+            selectHTML += '{% endfor %}';
+            selectHTML += '</select>';
+            cell1.innerHTML = selectHTML;
+
+            // Add input fields for other columns
+            cell2.innerHTML = '<input name="itemhsn" type="text" class="form-control border-1 bg-transparent text-white">';
+            cell3.innerHTML = '<input name="itemquantity" type="text" class="form-control border-1 bg-transparent text-white">';
+            cell4.innerHTML = '<input name="itemrate" type="text" class="form-control border-1 bg-transparent text-white">';
+            cell5.innerHTML = '<input name="itemdiscount" type="text" class="form-control border-1 bg-transparent text-white">';
+            cell6.innerHTML = '<input name="itemtax" type="text" class="form-control border-1 bg-transparent text-white">';
+            cell7.innerHTML = '<input name="itemamount" type="text" class="form-control border-1 bg-transparent text-white">';
+            cell8.innerHTML = '<button type="button" class="btn btn-danger text-center" onclick="deleteContact(this)">Delete</button>';
+
+            // Attach change event listener to item dropdown in new row
+            var newItemSelect = cell1.querySelector('select[name="iname"]');
+            newItemSelect.addEventListener('change', handleItemDropdownChange);
+        });
+
+        // Attach change event listener to item dropdown in existing rows
+        var existingItemSelects = document.querySelectorAll('#etbl select[name="iname"]');
+        existingItemSelects.forEach(function(select) {
+            select.addEventListener('change', handleItemDropdownChange);
+        });
     });
 </script>
+
 
  <!-- eway-table end-->
     <!-- Transaction type SCRIPT -->

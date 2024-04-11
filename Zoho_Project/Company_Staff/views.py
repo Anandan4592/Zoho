@@ -17450,9 +17450,9 @@ def eway_main(request):
     else:
         cmp = StaffDetails.objects.get(login_details = log_details).company
         dash_details = StaffDetails.objects.get(login_details=log_details)
-    bnk = Banking.objects.filter(company = cmp)
+    eway = Eway.objects.filter(company = cmp)
     allmodules= ZohoModules.objects.get(company = cmp)
-    return render(request,'zohomodules/eway_bill/eway_main.html',{'bnk':bnk, 'allmodules':allmodules, 'details':dash_details})
+    return render(request,'zohomodules/eway_bill/eway_main.html',{'eway':eway, 'allmodules':allmodules, 'details':dash_details})
 
 def eway_new(request):
     if 'login_id' in request.session:
@@ -17509,6 +17509,134 @@ def eway_new(request):
             }
     
             return render(request, 'zohomodules/eway_bill/eway_new.html',context)
+    
+
+def add_eway(request):
+   
+    if 'login_id' in request.session:
+        if request.session.has_key('login_id'):
+            log_id = request.session['login_id']
+           
+        else:
+            return redirect('/')
+    
+        log_details= LoginDetails.objects.get(id=log_id)
+        if log_details.user_type=='Staff':
+            dash_details = StaffDetails.objects.get(login_details=log_details)
+            comp_details=CompanyDetails.objects.get(id=dash_details.company.id)
+
+        else:    
+            dash_details = CompanyDetails.objects.get(login_details=log_details)
+            comp_details=CompanyDetails.objects.get(login_details=log_details)
+
+            
+        allmodules= ZohoModules.objects.get(company=comp_details,status='New')
+
+        
+
+       
+        if request.method == 'POST':
+             # Retrieve the latest bill number
+            last_bill = Eway.objects.order_by('-bill_number').first()
+            if last_bill:
+                last_number = int(last_bill.bill_number)
+                next_bill_number = '{:02d}'.format(last_number + 1)
+            else:
+                next_bill_number = '01'
+            doc_type = request.POST.get('edoc')
+            trans_sub_type = request.POST.get('etst')
+            customer_id = request.POST.get('ename')
+            bill_address = request.POST.get('eaddress')
+            bill_number = next_bill_number  # Use the generated bill number
+            reference_no = request.POST.get('eref')
+            date = request.POST.get('edate')
+            trans_type = request.POST.get('etrant')
+            place_of_supply = request.POST.get('eplace')
+            transportation = request.POST.get('etransportation')
+            kilometers = request.POST.get('ekilm')
+            vehicle_no = request.POST.get('evehno')
+            description = request.POST.get('note')
+            doc = request.FILES.get('file')
+            sub_total = request.POST.get('subtotal')
+            cgst = None
+            sgst = None
+            igst = request.POST.get('igst')
+            shipping = request.POST.get('ship')
+            adjustment = request.POST.get('adj')
+            grand_total = request.POST.get('grandtotal')
+            # Check the transaction type to determine whether to include HSN or SAC
+            if trans_type == 'GOODS':
+                hsnno = request.POST.get('hsn_no')
+                sacno = None  # Set SAC to None since it's not applicable
+            elif trans_type == 'SERVICES':
+                sacno = request.POST.get('sac_no')
+                hsnno = None  # Set HSN to None since it's not applicable
+            else:
+                hsnno = None
+                sacno = None
+            # Create Eway instance
+            eway = Eway.objects.create(
+                doc_type=doc_type,
+                trans_sub_type=trans_sub_type,
+                customer_id=customer_id,
+                bill_address=bill_address,
+                bill_number=bill_number,
+                reference_no=reference_no,
+                date=date,
+                trans_type=trans_type,
+                hsnno=hsnno,
+                sacno=sacno,
+                place_of_supply=place_of_supply,
+                transportation=transportation,
+                kilometers=kilometers,
+                vehicle_no=vehicle_no,
+                description=description,
+                doc=doc,
+                sub_total=sub_total,
+                CGST=cgst,
+                SGST=sgst,
+                IGST=igst,
+                shipping=shipping,
+                adjustment=adjustment,
+                grand_total=grand_total,
+                company_id=comp_details.id,  # Provide your company ID here
+                logindetails_id=log_details.id  # Provide your login details ID here
+            )
+            
+            # Process items data and save to Eway_bill_items table
+            items_count = int(request.POST.get('item_count', 0))
+            for i in range(items_count):
+                item = request.POST.get(f'iname_{i}')
+                hsn = request.POST.get(f'itemhsn_{i}')
+                quantity = request.POST.get(f'itemquantity_{i}')
+                price = request.POST.get(f'itemrate_{i}')
+                tax_rate = request.POST.get(f'itemtax_{i}')
+                discount = request.POST.get(f'itemdiscount_{i}')
+                total = request.POST.get(f'itemamount_{i}')
+                
+                # Create Eway_bill_items instance
+                Eway_bill_items.objects.create(
+                    items=item,
+                    hsn=hsn,
+                    quantity=quantity,
+                    price=price,
+                    tax_rate=tax_rate,
+                    discount=discount,
+                    total=total,
+                    eway=eway,
+                    company_id=comp_details.id,  # Provide your company ID here
+                    logindetails_id=log_details.id  # Provide your login details ID here
+                )
+            
+                messages.success(request, 'Eway bill created successfully!')   
+
+                return redirect('eway_main')
+        
+        else:
+            messages.error(request, 'Some error occurred !')   
+
+            return redirect('eway_new')
+    return redirect('eway_main')
 
 def eway_customer_create(request):
    
@@ -17927,114 +18055,7 @@ def transport_dropdown(request):
             return JsonResponse(options)
 
         
-def add_eway(request):
-   
-    if 'login_id' in request.session:
-        if request.session.has_key('login_id'):
-            log_id = request.session['login_id']
-           
-        else:
-            return redirect('/')
-    
-        log_details= LoginDetails.objects.get(id=log_id)
-        if log_details.user_type=='Staff':
-            dash_details = StaffDetails.objects.get(login_details=log_details)
-            comp_details=CompanyDetails.objects.get(id=dash_details.company.id)
 
-        else:    
-            dash_details = CompanyDetails.objects.get(login_details=log_details)
-            comp_details=CompanyDetails.objects.get(login_details=log_details)
-
-            
-        allmodules= ZohoModules.objects.get(company=comp_details,status='New')
-
-        
-
-       
-        if request.method == 'POST':
-            doc_type = request.POST.get('edoc')
-            trans_sub_type = request.POST.get('etst')
-            customer_id = request.POST.get('ename')
-            bill_address = request.POST.get('eaddress')
-            bill_number = request.POST.get('einvoice')
-            reference_no = request.POST.get('eref')
-            date = request.POST.get('edate')
-            trans_type = request.POST.get('etrant')
-            place_of_supply = request.POST.get('eplace')
-            transportation = request.POST.get('etransportation')
-            kilometers = request.POST.get('ekilm')
-            vehicle_no = request.POST.get('evehno')
-            description = request.POST.get('note')
-            doc = request.FILES.get('file')
-            sub_total = request.POST.get('subtotal')
-            cgst = request.POST.get('cgst')
-            sgst = request.POST.get('sgst')
-            igst = request.POST.get('igst')
-            shipping = request.POST.get('ship')
-            adjustment = request.POST.get('adj')
-            grand_total = request.POST.get('grandtotal')
-            
-            # Create Eway instance
-            eway = Eway.objects.create(
-                doc_type=doc_type,
-                trans_sub_type=trans_sub_type,
-                customer_id=customer_id,
-                bill_address=bill_address,
-                bill_number=bill_number,
-                reference_no=reference_no,
-                date=date,
-                trans_type=trans_type,
-                place_of_supply=place_of_supply,
-                transportation=transportation,
-                kilometers=kilometers,
-                vehicle_no=vehicle_no,
-                description=description,
-                doc=doc,
-                sub_total=sub_total,
-                CGST=cgst,
-                SGST=sgst,
-                IGST=igst,
-                shipping=shipping,
-                adjustment=adjustment,
-                grand_total=grand_total,
-                company_id=comp_details.id,  # Provide your company ID here
-                logindetails_id=log_details.id  # Provide your login details ID here
-            )
-            
-            # Process items data and save to Eway_bill_items table
-            items_count = int(request.POST.get('item_count', 0))
-            for i in range(items_count):
-                item = request.POST.get(f'iname_{i}')
-                hsn = request.POST.get(f'itemhsn_{i}')
-                quantity = request.POST.get(f'itemquantity_{i}')
-                price = request.POST.get(f'itemrate_{i}')
-                tax_rate = request.POST.get(f'itemtax_{i}')
-                discount = request.POST.get(f'itemdiscount_{i}')
-                total = request.POST.get(f'itemamount_{i}')
-                
-                # Create Eway_bill_items instance
-                Eway_bill_items.objects.create(
-                    items=item,
-                    hsn=hsn,
-                    quantity=quantity,
-                    price=price,
-                    tax_rate=tax_rate,
-                    discount=discount,
-                    total=total,
-                    eway=eway,
-                    company_id=comp_details.id,  # Provide your company ID here
-                    logindetails_id=log_details.id  # Provide your login details ID here
-                )
-            
-                messages.success(request, 'Eway bill created successfully!')   
-
-                return redirect('eway_main')
-        
-        else:
-            messages.error(request, 'Some error occurred !')   
-
-            return redirect('eway_new')
-    return redirect('eway_main')
 
 #----------------------End-----------------
 def check_journal_num_valid2(request):
