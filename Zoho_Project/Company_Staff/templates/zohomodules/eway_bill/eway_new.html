@@ -633,7 +633,15 @@ input[type="date"] {
                                 <td><input name="itemquantity" type="text" class="form-control border-1 bg-transparent text-white"></td>
                                 <td><input name="itemrate" type="text" class="form-control border-1 bg-transparent text-white"></td>
                                 <td><input name="itemdiscount" type="text" class="form-control border-1 bg-transparent text-white"></td>
-                                <td><input name="itemtax" type="text" class="form-control border-1 bg-transparent text-white"></td>
+                                <td style="width: 7rem;"><select name='itemtax'    class="form-control" style="background-color: black; color: white;border-radius: 5px;">
+                                    <option selected disabled hidden>Select</option>
+                                    <option value=28 >28.0% </option>
+                                    <option value=18 >18.0% </option>
+                                    <option value=12 >12.0% </option>
+                                    <option value=5 >05.0% </option>
+                                    <option value=3 >03.0% </option>
+                                    <option value=0 >0.0% </option>
+                                </select></td>
                                 <td><input name="itemamount" type="text" class="form-control border-1 bg-transparent text-white"></td>
                             <td><button type="button" class="btn btn-danger text-center" onclick="deleteContact(this)">Delete</button></td>
                             </tr>
@@ -663,17 +671,17 @@ input[type="date"] {
                             <div class="row container-fluid p-2 m-0" id="taxamountIGST" style="display: none;">
                                 <div class="col-sm-4 mt-2"><label for="a" class="text-center">IGST</label></div>
                                 <div class="col-sm-1 mt-2">:</div>
-                                <div class="col-sm-7 "><input type="number" name='igst' step="any" id="igstAmount"   class="form-control"/></div>
+                                <div class="col-sm-7 "><input type="number" name='igst' step="any" id="igstAmount" value=0.00  class="form-control"/></div>
                             </div>
                             <div class="row container-fluid p-2 m-0" style="display: none;" id="taxamountCGST">
                                 <div class="col-sm-4 mt-2"><label for="a" class="text-center">CGST</label></div>
                                 <div class="col-sm-1 mt-2">:</div>
-                                <div class="col-sm-7 mt-2"><input type="number" name='cgst' step="any" id="cgstAmount"    class="form-control"/></div>
+                                <div class="col-sm-7 mt-2"><input type="number" name='cgst' step="any" id="cgstAmount"  value=0.00  class="form-control"/></div>
                             </div>
                             <div class="row container-fluid p-2 m-0" style="display: none;" id="taxamountSGST">
                                 <div class="col-sm-4 mt-2"><label for="a" class="text-center">SGST</label></div>
                                 <div class="col-sm-1 mt-2">:</div>
-                                <div class="col-sm-7 mt-2"><input type="number" name='sgst' step="any" id="sgstAmount"   class="form-control"/></div>
+                                <div class="col-sm-7 mt-2"><input type="number" name='sgst' step="any" id="sgstAmount" value=0.00  class="form-control"/></div>
                             </div>
                             <div class="row container-fluid p-2 m-0">
                                 <div class="col-sm-4 mt-2"><label for="a" class="text-center">Tax Amount</label></div>
@@ -2002,6 +2010,7 @@ input[type="date"] {
                 customer_email: "{{ customer.customer_email }}",
                 GST_treatement: "{{ customer.GST_treatement }}",
                 GST_value: "{{ customer.GST_value|default_if_none:"null" }}", // Render GST value or "null" if empty
+                place_of_supply: "{{ customer.place_of_supply }}"
                 // Include other customer details as needed
             },
         {% endfor %}
@@ -2254,6 +2263,7 @@ function reloadcust() {
             row.querySelector('input[name="itemrate"]').value = item.selling_price;
             // Populate other fields as needed
         }
+        
     }
 
     // Event listener for item dropdown change

@@ -17558,9 +17558,9 @@ def add_eway(request):
             description = request.POST.get('note')
             doc = request.FILES.get('file')
             sub_total = request.POST.get('subtotal')
-            cgst = None
-            sgst = None
-            igst = request.POST.get('igst')
+            cgst = None if request.POST.get('cgst') == "0.00" else request.POST.get('cgst')
+            sgst = None if request.POST.get('sgst') == "0.00" else request.POST.get('sgst')
+            igst = None if request.POST.get('igst') == "0.00" else request.POST.get('igst')
             shipping = request.POST.get('ship')
             adjustment = request.POST.get('adj')
             grand_total = request.POST.get('grandtotal')
@@ -17604,33 +17604,38 @@ def add_eway(request):
             )
             
             # Process items data and save to Eway_bill_items table
-            items_count = int(request.POST.get('item_count', 0))
-            for i in range(items_count):
-                item = request.POST.get(f'iname_{i}')
-                hsn = request.POST.get(f'itemhsn_{i}')
-                quantity = request.POST.get(f'itemquantity_{i}')
-                price = request.POST.get(f'itemrate_{i}')
-                tax_rate = request.POST.get(f'itemtax_{i}')
-                discount = request.POST.get(f'itemdiscount_{i}')
-                total = request.POST.get(f'itemamount_{i}')
-                
-                # Create Eway_bill_items instance
-                Eway_bill_items.objects.create(
-                    items=item,
-                    hsn=hsn,
-                    quantity=quantity,
-                    price=price,
-                    tax_rate=tax_rate,
-                    discount=discount,
-                    total=total,
-                    eway=eway,
-                    company_id=comp_details.id,  # Provide your company ID here
-                    logindetails_id=log_details.id  # Provide your login details ID here
-                )
-            
-                messages.success(request, 'Eway bill created successfully!')   
+           
+            item_name = request.POST.get("iname")
+            hsn  = request.POST.get("itemhsn")
+            quantity = request.POST.get("itemquantity")
+            item_rate = request.POST.get("itemrate")
+            discount = request.POST.get("itemdiscount")
+            tax_rate = request.POST.get("itemtax")
+            total = request.POST.get("itemamount")
+          
 
-                return redirect('eway_main')
+           
+            
+            Eway_bill_items.objects.create(eway=eway,company = comp_details,logindetails = log_details,items=item_name,hsn=hsn, quantity=quantity, price=item_rate, tax_rate=tax_rate, discount=discount, total=total)
+
+
+                        
+                    
+            # Save transaction
+                    
+            Eway_bill_history.objects.create(
+                company = comp_details,
+                logindetails = log_details,
+                eway = eway,
+                date = request.POST['edate'],
+
+                action = 'Created'
+            )
+
+            
+            messages.success(request, 'Eway bill created successfully!')   
+
+            return redirect('eway_main')
         
         else:
             messages.error(request, 'Some error occurred !')   
