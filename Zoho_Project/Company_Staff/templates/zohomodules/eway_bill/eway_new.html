@@ -536,12 +536,12 @@ input[type="date"] {
                                         <option value="[AN]-Andaman And Nicobar Islands">[AN]-Andaman And Nicobar Islands</option>
                                         <option value="[AD]-Andhra Pradesh">[AD]-Andhra Pradesh</option>
                                         <option value="[AR]-Arunachal Pradesh">[AR]-Arunachal Pradesh	</option> 
-                                        <option value="volvo">[AS]-Assam</option>
+                                        <option value="[AS]-Assam">[AS]-Assam</option>
                                         <option value="[BR]-Bihar">[BR]-Bihar</option> 
-                                        <option value="volvo">[CH]-	Chandhigarh</option>
+                                        <option value="[CH]-Chandigarh">[CH]-	Chandhigarh</option>
                                         <option value="[CG]-Chattisgarh">[CG]-Chattisgarh</option>
                                         <option value="[DD]-Daman Diu">[DD]-Daman Diu</option>
-                                        <option value="volvo">[DL]-	Delhi</option>
+                                        <option value="[DL]-Delhi">[DL]-	Delhi</option>
                                         <option value="[GA]-Goa">[GA]-Goa</option> 
                                         <option value="[GJ]-Gujarat">[GJ]-Gujarat</option>
                                         <option value="[HR]-Haryana">[HR]-Haryana</option> 
@@ -624,25 +624,36 @@ input[type="date"] {
                             <tr>
                                 <td style="width: 7rem;"><select name="iname" class="form-control" id="iname"  style="background-color: black; color: white;border-radius: 5px;"  >
                                     {% for eitem in item %}
-                                      
+                                    <option value="" disabled selected hidden>Select</option>
                                       <option value={{eitem.id}}>{{eitem.item_name}}</option>
                                     {% endfor %}
                                   </select>
                                 </td>
                                 <td><input name="itemhsn" type="text" class="form-control border-1 bg-transparent text-white"></td>
-                                <td><input name="itemquantity" type="text" class="form-control border-1 bg-transparent text-white"></td>
-                                <td><input name="itemrate" type="text" class="form-control border-1 bg-transparent text-white"></td>
-                                <td><input name="itemdiscount" type="text" class="form-control border-1 bg-transparent text-white"></td>
-                                <td style="width: 7rem;"><select name='itemtax'    class="form-control" style="background-color: black; color: white;border-radius: 5px;">
-                                    <option selected disabled hidden>Select</option>
-                                    <option value=28 >28.0% </option>
-                                    <option value=18 >18.0% </option>
-                                    <option value=12 >12.0% </option>
-                                    <option value=5 >05.0% </option>
-                                    <option value=3 >03.0% </option>
-                                    <option value=0 >0.0% </option>
-                                </select></td>
-                                <td><input name="itemamount" type="text" class="form-control border-1 bg-transparent text-white"></td>
+                                <td><input name="itemquantity" type="number" class="form-control border-1 bg-transparent text-white" oninput="updateAmount()" ></td>
+                                <td><input name="itemrate" type="number" class="form-control border-1 bg-transparent text-white" oninput="updateAmount()" ></td>
+                                <td><input name="itemdiscount" type="number" class="form-control border-1 bg-transparent text-white" oninput="updateAmount()" ></td>
+                                <td style="width: 7rem;">
+                                    <select name='taxGST' id="taxGST"   class="form-control" style="background-color: black; color: white;border-radius: 5px;display: none;">
+                                        <option selected disabled hidden>Select </option>
+                                        <option value=28 >28.0% GST</option>
+                                        <option value=18 >18.0% GST</option>
+                                        <option value=12 >12.0% GST</option>
+                                        <option value=5 >05.0% GST</option>
+                                        <option value=3 >03.0% GST</option>
+                                        <option value=0 >0.0% GST</option>
+                                    </select>
+                                    <select name='taxIGST' id="taxIGST"    class="form-control" style="background-color: black; color: white;border-radius: 5px;display: none;">
+                                        <option selected disabled hidden >Select </option>
+                                        <option value=28 >28.0% IGST</option>
+                                        <option value=18 >18.0% IGST</option>
+                                        <option value=12 >12.0% IGST</option>
+                                        <option value=5 >05.0% IGST</option>
+                                        <option value=3 >03.0% IGST</option>
+                                        <option value=0 >0.0% IGST</option>
+                                    </select>
+                                </td>
+                                <td><input name="itemamount" type="text" class="form-control border-1 bg-transparent text-white" readonly></td>
                             <td><button type="button" class="btn btn-danger text-center" onclick="deleteContact(this)">Delete</button></td>
                             </tr>
                         </tbody>
@@ -1009,12 +1020,12 @@ input[type="date"] {
                                         <option value="[AN]-Andaman And Nicobar Islands">[AN]-Andaman And Nicobar Islands</option>
                                         <option value="[AD]-Andhra Pradesh">[AD]-Andhra Pradesh</option>
                                         <option value="[AR]-Arunachal Pradesh">[AR]-Arunachal Pradesh	</option> 
-                                        <option value="volvo">[AS]-Assam</option>
+                                        <option value="[AS]-Assam">[AS]-Assam</option>
                                         <option value="[BR]-Bihar">[BR]-Bihar</option> 
-                                        <option value="volvo">[CH]-	Chandhigarh</option>
+                                        <option value="[CH]-Chandigarh">[CH]-	Chandhigarh</option>
                                         <option value="[CG]-Chattisgarh">[CG]-Chattisgarh</option>
                                         <option value="[DD]-Daman Diu">[DD]-Daman Diu</option>
-                                        <option value="volvo">[DL]-	Delhi</option>
+                                        <option value="[DL]-Delhi">[DL]-	Delhi</option>
                                         <option value="[GA]-Goa">[GA]-Goa</option> 
                                         <option value="[GJ]-Gujarat">[GJ]-Gujarat</option>
                                         <option value="[HR]-Haryana">[HR]-Haryana</option> 
@@ -1975,6 +1986,8 @@ input[type="date"] {
                 id: {{ item.id }},
                 hsn_code: "{{ item.hsn_code|default_if_none:"" }}",
                 selling_price: "{{ item.selling_price|default_if_none:"" }}",
+                eigst: "{{ item.interstate_tax }}",
+                egst: "{{ item.intrastate_tax }}",
                 // Include other item details as needed
             },
         {% endfor %}
@@ -1999,9 +2012,32 @@ input[type="date"] {
     });
 </script>
 
-  
+<script>
+    // Function to update the amount based on quantity, rate, and discount
+    function updateAmount(event) {
+        var row = event.target.closest("tr");
+        var quantity = parseFloat(row.querySelector(".itemquantity").value);
+        var rate = parseFloat(row.querySelector(".itemrate").value);
+        var discount = parseFloat(row.querySelector(".itemdiscount").value);
+
+        // Calculate the amount
+        var amount = (quantity * rate) - discount;
+
+        // Update the amount field within the row
+        row.querySelector(".itemamount").value = amount.toFixed(2); // Adjust to desired decimal places
+    }
+
+    // Add event listeners to input fields for quantity, rate, and discount in each row
+    var inputFields = document.querySelectorAll(".itemquantity, .itemrate, .itemdiscount");
+    inputFields.forEach(function(input) {
+        input.addEventListener("input", updateAmount);
+    });
+</script>
+
+
 
   <!-- customer details retrieving -->>
+  
   <script>
     var customersData = [
         {% for customer in ecustomer %}
@@ -2037,31 +2073,60 @@ input[type="date"] {
     });
 </script>
 <script>
-    $('#PLACES').change(function() {
-    var selectedPlaceOfSupply = $(this).val();
-    console.log(selectedPlaceOfSupply,'selectedPlaceOfSupply')
-    var customerId = $('#ename').val();
-    console.log(customerId,'customerId')
-    if (customerId) {
-        var customer = customersData.find(function(c) {
-            return c.id == customerId;
-        });
-        if (customer) {
-            if (selectedPlaceOfSupply === customer.place_of_supply) {
+$('#iname').change(function() {
+    var selectedItem = $(this).val();
+    console.log('Selected Item:', selectedItem);
     
-                $('#taxamountCGST').css('display', 'flex');
-                $('#taxamountSGST').css('display', 'flex');
-                $('#taxamountIGST').css('display', 'none');
-            } else {
-                $('#taxamountCGST').css('display', 'none');
-                $('#taxamountSGST').css('display', 'none');
-                $('#taxamountIGST').css('display', 'flex');
+    var selectedItemId = parseInt(selectedItem);
+    console.log('Selected Item ID:', selectedItemId);
+    
+    var selectedItemData = itemsData.find(function(item) {
+        return item.id === selectedItemId;
+    });
+    console.log('Selected Item Data:', selectedItemData);
+    
+    if (selectedItemData) {
+        // Populate HSN field
+        
+        // Populate GST or IGST field based on place of supply
+        var selectedPlaceOfSupply = $('#PLACES').val();
+        console.log('Selected Place of Supply:', selectedPlaceOfSupply);
+        
+        var customerId = $('#ename').val();
+        console.log('Customer ID:', customerId);
+        
+        if (customerId) {
+            var customer = customersData.find(function(c) {
+                return c.id == customerId;
+            });
+            console.log('Customer:', customer);
+            
+            if (customer) {
+                if (selectedPlaceOfSupply === customer.place_of_supply) {
+                    $('#taxamountCGST').css('display', 'flex');
+                    $('#taxamountSGST').css('display', 'flex');
+                    $('#taxamountIGST').css('display', 'none');
+                    $('#taxGST').css('display', 'flex');
+                    $('#taxIGST').css('display', 'none');
+                    $('#taxGST').val(selectedItemData.egst); // Use selectedItemData.egst for intrastate
+                } else {
+                    $('#taxamountCGST').css('display', 'none');
+                    $('#taxamountSGST').css('display', 'none');
+                    $('#taxamountIGST').css('display', 'flex');
+                    $('#taxIGST').css('display', 'flex');
+                    $('#taxGST').css('display', 'none');
+                    $('#taxIGST').val(selectedItemData.eigst); // Use selectedItemData.eigst for interstate
+                }
             }
         }
     }
 });
 
+
+
 </script>
+
+
   
    <!-- Transport SCRIPT -->
    <script>
@@ -2252,23 +2317,39 @@ function reloadcust() {
     }
 
     // Function to populate item details based on selected item
-    function populateItemDetails(selectElement) {
+    function populateItemDetails(selectElement, row) {
         var itemId = selectElement.value;
         var item = itemsData.find(function(i) {
             return i.id == itemId;
         });
         if (item) {
-            var row = selectElement.parentNode.parentNode;
             row.querySelector('input[name="itemhsn"]').value = item.hsn_code;
             row.querySelector('input[name="itemrate"]').value = item.selling_price;
-            // Populate other fields as needed
+            // Populate tax fields
+            var selectedPlaceOfSupply = $('#PLACES').val();
+            var customerId = $('#ename').val();
+            if (customerId) {
+                var customer = customersData.find(function(c) {
+                    return c.id == customerId;
+                });
+                if (customer) {
+                    if (selectedPlaceOfSupply === customer.place_of_supply) {
+                        row.querySelector('#taxGST').style.display = 'flex';
+                        row.querySelector('#taxIGST').style.display = 'none';
+                        row.querySelector('#taxGST').value = item.egst;
+                    } else {
+                        row.querySelector('#taxGST').style.display = 'none';
+                        row.querySelector('#taxIGST').style.display = 'flex';
+                        row.querySelector('#taxIGST').value = item.eigst;
+                    }
+                }
+            }
         }
-        
     }
 
     // Event listener for item dropdown change
     function handleItemDropdownChange() {
-        populateItemDetails(this);
+        populateItemDetails(this, this.parentNode.parentNode);
     }
 
     document.addEventListener('DOMContentLoaded', function() {
@@ -2298,16 +2379,35 @@ function reloadcust() {
 
             // Add input fields for other columns
             cell2.innerHTML = '<input name="itemhsn" type="text" class="form-control border-1 bg-transparent text-white">';
-            cell3.innerHTML = '<input name="itemquantity" type="text" class="form-control border-1 bg-transparent text-white">';
-            cell4.innerHTML = '<input name="itemrate" type="text" class="form-control border-1 bg-transparent text-white">';
-            cell5.innerHTML = '<input name="itemdiscount" type="text" class="form-control border-1 bg-transparent text-white">';
-            cell6.innerHTML = '<input name="itemtax" type="text" class="form-control border-1 bg-transparent text-white">';
+            cell3.innerHTML = '<input name="itemquantity" type="number" class="form-control border-1 bg-transparent text-white"  >';
+            cell4.innerHTML = '<input name="itemrate" type="number" class="form-control border-1 bg-transparent text-white">';
+            cell5.innerHTML = '<input name="itemdiscount" type="number" class="form-control border-1 bg-transparent text-white">';
+            cell6.innerHTML = `<select name='taxGST' id="taxGST" class="form-control" style="background-color: black; color: white; border-radius: 5px;display: none;">
+                                    <option selected disabled hidden>Select </option>
+                                    <option value=28 >28.0% GST</option>
+                                    <option value=18 >18.0% GST</option>
+                                    <option value=12 >12.0% GST</option>
+                                    <option value=5 >05.0% GST</option>
+                                    <option value=3 >03.0% GST</option>
+                                    <option value=0 >0.0% GST</option>
+                                </select>
+                                <select name='taxIGST' id="taxIGST" class="form-control" style="background-color: black; color: white; border-radius: 5px;display: none;">
+                                    <option selected disabled hidden >Select </option>
+                                    <option value=28 >28.0% IGST</option>
+                                    <option value=18 >18.0% IGST</option>
+                                    <option value=12 >12.0% IGST</option>
+                                    <option value=5 >05.0% IGST</option>
+                                    <option value=3 >03.0% IGST</option>
+                                    <option value=0 >0.0% IGST</option>
+                                </select>`;
             cell7.innerHTML = '<input name="itemamount" type="text" class="form-control border-1 bg-transparent text-white">';
             cell8.innerHTML = '<button type="button" class="btn btn-danger text-center" onclick="deleteContact(this)">Delete</button>';
 
             // Attach change event listener to item dropdown in new row
             var newItemSelect = cell1.querySelector('select[name="iname"]');
             newItemSelect.addEventListener('change', handleItemDropdownChange);
+            // Populate item details for the new row
+            populateItemDetails(newItemSelect, newRow);
         });
 
         // Attach change event listener to item dropdown in existing rows
