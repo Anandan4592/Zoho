@@ -630,9 +630,9 @@ input[type="date"] {
                                   </select>
                                 </td>
                                 <td><input name="itemhsn" type="text" class="form-control border-1 bg-transparent text-white"></td>
-                                <td><input name="itemquantity" type="number" class="form-control border-1 bg-transparent text-white" oninput="updateAmount()" ></td>
-                                <td><input name="itemrate" type="number" class="form-control border-1 bg-transparent text-white" oninput="updateAmount()" ></td>
-                                <td><input name="itemdiscount" type="number" class="form-control border-1 bg-transparent text-white" oninput="updateAmount()" ></td>
+                                <td><input name="itemquantity" type="number" class="form-control border-1 bg-transparent text-white" onchange="calculateTotals()"></td>
+                                <td><input name="itemrate" type="number" class="form-control border-1 bg-transparent text-white" onchange="calculateTotals()" ></td>
+                                <td><input name="itemdiscount" type="number" class="form-control border-1 bg-transparent text-white" onchange="calculateTotals()" ></td>
                                 <td style="width: 7rem;">
                                     <select name='taxGST' id="taxGST"   class="form-control" style="background-color: black; color: white;border-radius: 5px;display: none;">
                                         <option selected disabled hidden>Select </option>
@@ -653,7 +653,7 @@ input[type="date"] {
                                         <option value=0 >0.0% IGST</option>
                                     </select>
                                 </td>
-                                <td><input name="itemamount" type="text" class="form-control border-1 bg-transparent text-white" readonly></td>
+                                <td><input name="itemamount" type="text" id="itemamount" class="form-control border-1 bg-transparent text-white" readonly></td>
                             <td><button type="button" class="btn btn-danger text-center" onclick="deleteContact(this)">Delete</button></td>
                             </tr>
                         </tbody>
@@ -2012,27 +2012,7 @@ input[type="date"] {
     });
 </script>
 
-<script>
-    // Function to update the amount based on quantity, rate, and discount
-    function updateAmount(event) {
-        var row = event.target.closest("tr");
-        var quantity = parseFloat(row.querySelector(".itemquantity").value);
-        var rate = parseFloat(row.querySelector(".itemrate").value);
-        var discount = parseFloat(row.querySelector(".itemdiscount").value);
 
-        // Calculate the amount
-        var amount = (quantity * rate) - discount;
-
-        // Update the amount field within the row
-        row.querySelector(".itemamount").value = amount.toFixed(2); // Adjust to desired decimal places
-    }
-
-    // Add event listeners to input fields for quantity, rate, and discount in each row
-    var inputFields = document.querySelectorAll(".itemquantity, .itemrate, .itemdiscount");
-    inputFields.forEach(function(input) {
-        input.addEventListener("input", updateAmount);
-    });
-</script>
 
 
 
@@ -2071,6 +2051,45 @@ input[type="date"] {
             }
         });
     });
+</script>
+<script>
+    function calculateTotals() {
+    var rows = document.querySelectorAll('#etbl tbody tr');
+    var totalAmount = 0;
+
+    rows.forEach(function(row) {
+        var quantity = parseFloat(row.querySelector('input[name="itemquantity"]').value) || 0;
+        var rate = parseFloat(row.querySelector('input[name="itemrate"]').value) || 0;
+        var discount = parseFloat(row.querySelector('input[name="itemdiscount"]').value) || 0;
+        var amount = (quantity * rate) - discount;
+        
+        row.querySelector('input[name="itemamount"]').value = amount.toFixed(2);
+        totalAmount += amount;
+    });
+
+    document.getElementById('sub_total').value = totalAmount.toFixed(2);
+
+    // Function to calculate the total amount
+function calculateTotalAmount() {
+    var subtotal = parseFloat(document.getElementById('sub_total').value) || 0;
+    var shipping = parseFloat(document.getElementById('ship').value) || 0;
+    var adjustment = parseFloat(document.getElementById('adj').value) || 0;
+    var totalAmount = subtotal + shipping + adjustment;
+    document.getElementById('grandtotal').value = totalAmount.toFixed(2);
+}
+
+// Event listeners for shipping and adjustment input fields
+document.getElementById('ship').addEventListener('input', calculateTotalAmount);
+document.getElementById('adj').addEventListener('input', calculateTotalAmount);
+
+// Call the function initially to calculate the total amount based on the default values
+calculateTotalAmount();
+
+}
+
+    
+
+
 </script>
 <script>
 $('#iname').change(function() {
@@ -2314,8 +2333,9 @@ function reloadcust() {
     function deleteContact(button) {
         var row = button.parentNode.parentNode;
         row.parentNode.removeChild(row);
+        
     }
-
+    
     // Function to populate item details based on selected item
     function populateItemDetails(selectElement, row) {
         var itemId = selectElement.value;
@@ -2379,9 +2399,9 @@ function reloadcust() {
 
             // Add input fields for other columns
             cell2.innerHTML = '<input name="itemhsn" type="text" class="form-control border-1 bg-transparent text-white">';
-            cell3.innerHTML = '<input name="itemquantity" type="number" class="form-control border-1 bg-transparent text-white"  >';
-            cell4.innerHTML = '<input name="itemrate" type="number" class="form-control border-1 bg-transparent text-white">';
-            cell5.innerHTML = '<input name="itemdiscount" type="number" class="form-control border-1 bg-transparent text-white">';
+            cell3.innerHTML = '<input name="itemquantity" type="number" class="form-control border-1 bg-transparent text-white" onchange="calculateTotals()" >';
+            cell4.innerHTML = '<input name="itemrate" type="number" class="form-control border-1 bg-transparent text-white" onchange="calculateTotals()">';
+            cell5.innerHTML = '<input name="itemdiscount" type="number" class="form-control border-1 bg-transparent text-white" onchange="calculateTotals()">';
             cell6.innerHTML = `<select name='taxGST' id="taxGST" class="form-control" style="background-color: black; color: white; border-radius: 5px;display: none;">
                                     <option selected disabled hidden>Select </option>
                                     <option value=28 >28.0% GST</option>
@@ -2400,7 +2420,7 @@ function reloadcust() {
                                     <option value=3 >03.0% IGST</option>
                                     <option value=0 >0.0% IGST</option>
                                 </select>`;
-            cell7.innerHTML = '<input name="itemamount" type="text" class="form-control border-1 bg-transparent text-white">';
+            cell7.innerHTML = '<input name="itemamount" type="text" id="itemamount" class="form-control border-1 bg-transparent text-white">';
             cell8.innerHTML = '<button type="button" class="btn btn-danger text-center" onclick="deleteContact(this)">Delete</button>';
 
             // Attach change event listener to item dropdown in new row

@@ -17561,9 +17561,9 @@ def add_eway(request):
             cgst = None if request.POST.get('cgst') == "0.00" else request.POST.get('cgst')
             sgst = None if request.POST.get('sgst') == "0.00" else request.POST.get('sgst')
             igst = None if request.POST.get('igst') == "0.00" else request.POST.get('igst')
-            shipping = request.POST.get('ship')
-            adjustment = request.POST.get('adj')
-            grand_total = request.POST.get('grandtotal')
+            shipping = None if request.POST.get('ship') == "0.00" else request.POST.get('ship')
+            adjustment = None if request.POST.get('adj') == "0.00" else request.POST.get('adj')
+            grand_total =  request.POST.get('grandtotal')
             # Check the transaction type to determine whether to include HSN or SAC
             if trans_type == 'GOODS':
                 hsnno = request.POST.get('hsn_no')
