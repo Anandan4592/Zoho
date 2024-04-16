@@ -452,6 +452,9 @@ urlpatterns = [
     path('add_transport',views.add_transport,name = 'add_transport'),
     path('transport_dropdown',views.transport_dropdown,name = 'transport_dropdown'),
     path('add_eway',views.add_eway,name = 'add_eway'),
+    path('zohomodules/eway_bill/eway_overview',views.eway_overview,name='eway_overview'),
+    path('ewayoverview/<int:pk>',views.ewayoverview,name='ewayoverview'),
+    
  #-------------------------------------eway end-------------------------------------#
     re_path(r'^static/(?P<path>.*)$', serve,{'document_root': settings.STATIC_ROOT}),
 ]

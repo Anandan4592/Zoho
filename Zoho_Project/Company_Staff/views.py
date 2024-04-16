@@ -17454,6 +17454,77 @@ def eway_main(request):
     allmodules= ZohoModules.objects.get(company = cmp)
     return render(request,'zohomodules/eway_bill/eway_main.html',{'eway':eway, 'allmodules':allmodules, 'details':dash_details})
 
+def eway_overview(request):
+    if 'login_id' in request.session:
+        if request.session.has_key('login_id'):
+            log_id = request.session['login_id']
+           
+        else:
+            return redirect('/')
+    
+        log_details= LoginDetails.objects.get(id=log_id)
+        if log_details.user_type=='Staff':
+            dash_details = StaffDetails.objects.get(login_details=log_details)
+            comp_details=CompanyDetails.objects.get(id=dash_details.company.id)
+
+        else:    
+            dash_details = CompanyDetails.objects.get(login_details=log_details)
+            comp_details=CompanyDetails.objects.get(login_details=log_details)
+
+            
+        allmodules= ZohoModules.objects.get(company=comp_details,status='New')
+
+        data=Eway.objects.filter(company=comp_details)
+
+        
+
+        return render(request,'zohomodules/eway_bill/eway_overview.html',{'details':dash_details,'allmodules': allmodules,'data':data,'log_details':log_details}) 
+
+
+    else:
+        return redirect('/')
+
+def ewayoverview(request,pk):
+    if 'login_id' in request.session:
+        if request.session.has_key('login_id'):
+            log_id = request.session['login_id']
+           
+        else:
+            return redirect('/')
+    
+        log_details= LoginDetails.objects.get(id=log_id)
+        if log_details.user_type=='Staff':
+            dash_details = StaffDetails.objects.get(login_details=log_details)
+            comp_details=CompanyDetails.objects.get(id=dash_details.company.id)
+
+        else:    
+            dash_details = CompanyDetails.objects.get(login_details=log_details)
+            comp_details=CompanyDetails.objects.get(login_details=log_details)
+
+            
+        allmodules= ZohoModules.objects.get(company=comp_details,status='New')
+   
+
+        vendor_obj=Eway.objects.get(id=pk)
+
+        # Getting all vendor to disply on the left side of vendor_detailsnew page
+        vendor_objs=Eway.objects.filter(company=comp_details)
+
+        
+        vendor_history=Eway_bill_history.objects.filter(eway=vendor_obj)
+    
+    content = {
+                'details': dash_details,
+               
+                'allmodules': allmodules,
+                'vendor_obj':vendor_obj,
+                'log_details':log_details,
+                'vendor_objs':vendor_objs,
+                
+                'vendor_history':vendor_history,
+        }
+    return render(request,'zohomodules/eway_bill/eway_overview.html',content)    
+
 def eway_new(request):
     if 'login_id' in request.session:
         login_id = request.session['login_id']
@@ -17533,7 +17604,6 @@ def add_eway(request):
         allmodules= ZohoModules.objects.get(company=comp_details,status='New')
 
         
-
        
         if request.method == 'POST':
              # Retrieve the latest bill number

@@ -159,11 +159,12 @@
                             </thead>
                             <tbody>
                                 {% for b in eway %}
-                                <tr class='clickable-row text-center' >
+                                <tr class='clickable-row text-center' data-href="{% url 'ewayoverview' b.id %} " style="cursor: pointer;">
                                     <td>{{ b.date }}</td>
                                     <td>{{ b.trans_type }}</td>
                                     <td>{{ b.bill_number }}</td>
                                     <td>{{ b.customer.customer_display_name }}</td>
+                                    <td>{{ b.customer.customer_email }}</td>
                                     <td> {{ b.sub_total }}</td>
                                 </tr>
                                 {%endfor%}  
